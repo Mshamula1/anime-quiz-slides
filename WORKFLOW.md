@@ -53,9 +53,11 @@ for **12:00 PM** and **8:00 PM America/New_York** on TikTok account @theanimecon
    - **times:** 12:00 and 20:00 America/New_York that day.
      - If a slot is less than 10 minutes away or already past, skip it, and make only as many characters as there are open slots.
      - First call `getScheduledPosts` for that day; if a slot already has a TikTok post, don't add another.
-   - **Caption:** 300–600 characters, no line breaks (the TikTok API strips them), ending with
+   - **tiktokData.title (required by Metricool):** `Guess That Character: HARD MODE 💀` or `Guess That Character: EXTREME MODE 💀💀`. Never put the answer in the title.
+   - **Caption: always a LONG description,** 1,000–1,800 characters (owner's standing request), no line breaks (the TikTok API strips them), ending with
      `#onepiece #guessthecharacter #animequiz #anime #animetiktok #onepiecefan`.
-     Use the style of the earlier captions:
+     Fill the length with engagement copy, not answer hints: a vague teaser about the character type (never names, places, crews or devil fruits that give it away), how the clues get easier, a "no googling" challenge, a "got it on clue 1 = genius" brag prompt, a tag-a-friend line, and "Follow for a new Guess That Character quiz every day at 12 PM and 8 PM ET."
+     It must still include the style of the earlier captions:
      - a mode label ("HARD MODE 💀" / "EXTREME MODE 💀💀")
      - a challenge hook
      - "swipe through all 5 clues"
