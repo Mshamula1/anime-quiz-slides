@@ -1,7 +1,7 @@
 # Daily "Guess That Character" TikTok posts
 
 Each daily run makes **two** One Piece "Guess That Character" photo carousels and schedules them in Metricool
-for **12:00 PM** and **8:00 PM America/New_York** on TikTok account @theanimecontenthub (Metricool blogId `7999182`).
+for **11:50 AM** and **7:50 PM America/New_York** (10 minutes early, because TikTok takes ~10 min to process a carousel, so posts appear around 12:00 and 8:00) on TikTok account @theanimecontenthub (Metricool blogId `7999182`).
 
 ## Fixed pieces (never change these)
 - **Slide 1, the cover:** `slides/cover.jpg`. It's the owner's chosen cover image. Use this exact file every time; never re-render or redraw it.
@@ -50,7 +50,7 @@ for **12:00 PM** and **8:00 PM America/New_York** on TikTok account @theanimecon
    - **privacyOption:** PUBLIC_TO_EVERYONE
    - **photoCoverIndex:** 0
    - **media**, in this order: `.../slides/cover.jpg`, then slide_2 … slide_7 of that character
-   - **times:** 12:00 and 20:00 America/New_York that day.
+   - **times:** 11:50 and 19:50 America/New_York that day (NOT 12:00/20:00; the 10-minute lead covers TikTok processing).
      - If a slot is less than 10 minutes away or already past, skip it, and make only as many characters as there are open slots.
      - First call `getScheduledPosts` for that day; if a slot already has a TikTok post, don't add another.
    - **tiktokData.title (required by Metricool):** `Guess That Character: HARD MODE 💀` or `Guess That Character: EXTREME MODE 💀💀`. Never put the answer in the title.
