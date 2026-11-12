@@ -49,6 +49,7 @@ for **11:50 AM** and **7:50 PM America/New_York** (10 minutes early, because Tik
    - **autoPublish:** true
    - **privacyOption:** PUBLIC_TO_EVERYONE
    - **photoCoverIndex:** 0
+   - **autoAddMusic:** true. REQUIRED on every post, so TikTok attaches a trending sound to the carousel; posts without it publish silent. The owner wants sound on every post. (The Metricool API can't pick a specific song for TikTok; only this random-music option is available.)
    - **media**, in this order: `.../slides/cover.jpg`, then slide_2 … slide_7 of that character
    - **times:** 11:50 and 19:50 America/New_York that day (NOT 12:00/20:00; the 10-minute lead covers TikTok processing).
      - If a slot is less than 10 minutes away or already past, skip it, and make only as many characters as there are open slots.
