@@ -68,7 +68,7 @@ for **11:50 AM** and **7:50 PM America/New_York** (10 minutes early, because Tik
    - **firstCommentText:** leave empty. Don't reveal the answer.
 8b. **YouTube Short (same quiz, narrated video form).** Owner-approved 2026-11-16. TikTok stays a photo carousel; the same brand's YouTube channel gets the identical slides as a narrated video. Never change the slides themselves for YouTube.
    - Setup (fresh container): `pip install kokoro-onnx soundfile --break-system-packages` (ffmpeg is preinstalled). The script downloads the Kokoro voice model (~350 MB) from GitHub releases into `~/tts` on first run.
-   - After step 7, run `python3 templates/make_short.py work/clues_<name>.html slides/<YYYY-MM-DD>-<name>` → writes `slides/<YYYY-MM-DD>-<name>/short.mp4` (1080×1920, ~45s). Do not change its defaults:
+   - After step 7, copy `work/clues_<name>.html` to `slides/<YYYY-MM-DD>-<name>/clues.html` (so a later run can rebuild the Short), then run `python3 templates/make_short.py slides/<YYYY-MM-DD>-<name>/clues.html slides/<YYYY-MM-DD>-<name>` → writes `slides/<YYYY-MM-DD>-<name>/short.mp4` (1080×1920, ~45s). Do not change its defaults:
      - Narrator voice `af_heart` (owner picked "voice 4").
      - Opening line, exactly: "Are you a real One Piece fan? If you are, then let's see if you can guess this character..." Then "Clue one. <clue>" … "Clue five. <clue>", then "Who do you think it was? Comment your answer, and which clue you got it on!"
      - Each slide stays up for its narration plus ~1.6s think time; a yellow think-timer bar shrinks along the bottom of each clue slide; slide-left transitions.
