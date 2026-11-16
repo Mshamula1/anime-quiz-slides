@@ -29,7 +29,7 @@ def clean(s):
 clues = [clean(c) for c in re.findall(r'<div class="clue">(.*?)</div>', open(clues_html).read(), re.S)]
 assert len(clues) == 5, clues
 words = ['one', 'two', 'three', 'four', 'five']
-lines = ["Guess that character! One Piece edition. Five clues, hardest first. Only real fans get it on clue one."]
+lines = ["Are you a real One Piece fan? If you are, then let's see if you can guess this character..."]
 lines += [f"Clue {words[i]}. {c}" for i, c in enumerate(clues)]
 lines += ["Who do you think it was? Comment your answer, and which clue you got it on!"]
 pads = [0.5] + [THINK] * 5 + [1.2]
