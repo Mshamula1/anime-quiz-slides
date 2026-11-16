@@ -1,7 +1,7 @@
 # Daily "Guess That Character" TikTok posts
 
 Each daily run makes **two** One Piece "Guess That Character" photo carousels and schedules them in Metricool
-for **11:50 AM** and **7:50 PM America/New_York** (10 minutes early, because TikTok takes ~10 min to process a carousel, so posts appear around 12:00 and 8:00) on TikTok account @theanimecontenthub (Metricool blogId `7999182`).
+for **11:50 AM** and **7:50 PM America/New_York** (10 minutes early, because TikTok takes ~10 min to process a carousel, so posts appear around 12:00 and 8:00) on TikTok account @theanimecontenthub (Metricool blogId `7999182`). The same two quizzes also go to the brand's YouTube channel as Shorts (video version of the same slides) at **12:00 PM** and **8:00 PM** ET — see step 8b.
 
 ## Fixed pieces (never change these)
 - **Slide 1, the cover:** `slides/cover.jpg`. It's the owner's chosen cover image. Use this exact file every time; never re-render or redraw it.
@@ -66,6 +66,13 @@ for **11:50 AM** and **7:50 PM America/New_York** (10 minutes early, because Tik
      - "I'll pin the answer later"
      - "who should I do next?"
    - **firstCommentText:** leave empty. Don't reveal the answer.
+8b. **YouTube Short (same content, video form).** TikTok stays a photo carousel; the same brand's YouTube channel gets the identical slides as a video.
+   - After step 7, run `templates/make_video.sh slides/<YYYY-MM-DD>-<name>` → writes `slides/<YYYY-MM-DD>-<name>/short.mp4` (1080×1920, cover 2.5s, each clue 4.5s, ending 3.5s, slide transitions, ~26s). Commit, push, and confirm the raw URL returns HTTP 200.
+   - Schedule a second `createScheduledPost` (blogId `7999182`) per character with **providers:** youtube, **autoPublish:** true, **media:** `[.../short.mp4]`.
+   - **times:** 12:00 and 20:00 America/New_York (YouTube publishes almost instantly, so no 10-minute lead; it goes live alongside the TikTok post). Same skip rule: skip a slot under 10 minutes away or past, and check `getScheduledPosts` so a slot never gets two YouTube posts.
+   - **text:** the exact same caption as the TikTok post.
+   - **youtubeData:** `{"title": "<same title as tiktokData.title> #shorts", "type": "short", "privacy": "public", "madeForKids": false, "category": "ENTERTAINMENT", "tags": ["one piece","guess the character","anime quiz","anime","one piece quiz"], "isAiGeneratedContent": false}`. Never put the answer in the title.
+   - The video has no music (Metricool can't add sound to YouTube); it carries a silent audio track.
 9. **Record:**
    - Append both names to `used.txt` with the date and scheduled time.
    - Add the answers to `answers.md` (date, time, character, clues), so the owner can pin them.
