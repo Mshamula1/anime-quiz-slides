@@ -341,7 +341,7 @@
       if (fl > 0.02) { ctx.fillStyle = `rgba(255,255,240,${fl})`; ctx.fillRect(0, 0, W, H); }
       if (t < 0.12) { ctx.fillStyle = `rgba(255,255,255,${0.8 * (1 - t / 0.12)})`; ctx.fillRect(0, 0, W, H); }
     },
-    post: { paper: 0, vignette: 0.25, grain: 0.03 },
+    post: { paper: 0, vignette: 0.25, grain: 0 },
     fadeOut: 0.4,
   });
 })();

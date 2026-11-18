@@ -1,7 +1,7 @@
 # Daily "Guess That Character" TikTok posts
 
 Each daily run makes **two** One Piece "Guess That Character" photo carousels and schedules them in Metricool
-for **11:50 AM** and **7:50 PM America/New_York** (10 minutes early, because TikTok takes ~10 min to process a carousel, so posts appear around 12:00 and 8:00) on TikTok account @theanimecontenthub (Metricool blogId `7999182`). The same two quizzes also go to the brand's YouTube channel as narrated Shorts (AI-voiced video version of the same slides) at **12:00 PM** and **8:00 PM** ET — see step 8b. The daily report lists both the TikTok and YouTube times.
+for **11:50 AM** and **7:50 PM America/New_York** (10 minutes early, because TikTok takes ~10 min to process a carousel, so posts appear around 12:00 and 8:00) on TikTok account @theanimecontenthub (Metricool blogId `7999182`). The same two quizzes also go to the brand's YouTube channel as animated narrated Shorts (v2, with an answer reveal at the end) at **12:00 PM** and **8:00 PM** ET — see step 8b. The daily report lists both the TikTok and YouTube times.
 
 ## Fixed pieces (never change these)
 - **Slide 1, the cover:** `slides/cover.jpg`. It's the owner's chosen cover image. Use this exact file every time; never re-render or redraw it.
@@ -66,24 +66,26 @@ for **11:50 AM** and **7:50 PM America/New_York** (10 minutes early, because Tik
      - "I'll pin the answer later"
      - "who should I do next?"
    - **firstCommentText:** leave empty. Don't reveal the answer.
-8b. **YouTube Short (same quiz, narrated video form).** Owner-approved 2026-11-16. TikTok stays a photo carousel; the same brand's YouTube channel gets the identical slides as a narrated video. Never change the slides themselves for YouTube.
-   - Setup (fresh container): `pip install kokoro-onnx soundfile --break-system-packages` (ffmpeg is preinstalled). The script downloads the Kokoro voice model (~350 MB) from GitHub releases into `~/tts` on first run.
-   - After step 7, copy `work/clues_<name>.html` to `slides/<YYYY-MM-DD>-<name>/clues.html` (so a later run can rebuild the Short), then run `python3 templates/make_short.py slides/<YYYY-MM-DD>-<name>/clues.html slides/<YYYY-MM-DD>-<name>` → writes `slides/<YYYY-MM-DD>-<name>/short.mp4` (1080×1920, ~45s). Do not change its defaults:
-     - Narrator voice `af_heart` (owner picked "voice 4").
-     - Opening line, exactly: "Are you a real One Piece fan? If you are, then let's see if you can guess this character..." Then "Clue one. <clue>" … "Clue five. <clue>", then "Who do you think it was? Comment your answer, and which clue you got it on!"
-     - Each slide stays up for its narration plus ~1.6s think time; a yellow think-timer bar shrinks along the bottom of each clue slide; slide-left transitions.
-   - Watch-check: grab a few frames (e.g. `ffmpeg -i short.mp4 -vf "fps=1/5,scale=216:384,tile=10x1" -frames:v 1 sheet.png`) and confirm all 7 slides appear and the audio isn't silent.
-   - Commit and push. In `media`, use the commit-pinned raw URL `https://raw.githubusercontent.com/Mshamula1/anime-quiz-slides/<commit-sha>/slides/.../short.mp4` (avoids stale CDN caches). Confirm it returns HTTP 200.
+8b. **YouTube Short: v2 animated version (owner-approved 2026-11-18; replaces the 2026-11-16 slideshow Short).** TikTok stays a photo carousel and is NOT affected by anything in this step. YouTube gets an animated, narrated, scored video of the same quiz, built from the same clue file and illustrations (never change the TikTok slides for YouTube).
+   - Setup (fresh container): `pip install kokoro-onnx soundfile --break-system-packages`. If `~/tts/kokoro-v1.0.onnx` and `~/tts/voices-v1.0.bin` are missing, download them from `https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/` into `~/tts`. Node 22+, ffmpeg, Chrome/Chromium and Python Playwright are preinstalled. The animation engine is vendored in `templates/short2/engine` (from the animation-studio skill); no npm install.
+   - After step 7, copy `work/clues_<name>.html` to `slides/<YYYY-MM-DD>-<name>/clues.html`, then run (in the background, ~8 min each; poll the log):
+     `bash templates/short2/make_short2.sh slides/<YYYY-MM-DD>-<name> "<Answer Name>" "HARD MODE"` (or `"EXTREME MODE"`)
+     → writes `slides/<YYYY-MM-DD>-<name>/short.mp4` (1080×1920, ~50s, H.264/AAC, -14 LUFS) and prints a frame-sheet path. `<Answer Name>` is the character's common name as fans know it (e.g. "Iceburg", "Lola").
+   - What it contains (don't change without the owner): voice `af_heart`; hook line "Only real One Piece fans get this on clue one." + "Can you?" over the fixed cover with a mode stamp; per clue: "Clue one!" … "Last clue!" then the clue read aloud, art slam-in + slow push, word-by-word highlighted clue card, WORTH 5-4-3-2-1 PTS ladder, timer bar, 3-2-1 countdown with ticks and "GOT IT YET?"; ending "Who is it? Lock in your answer!" → drum roll 3-2-1 → **answer reveal** ("It's <Answer>!") with confetti → points recap + "COMMENT YOUR SCORE" → "New quiz every day 12 PM & 8 PM ET · SUBSCRIBE". Original synthesized music + SFX, ducked under the voice.
+   - Check: open the printed frame sheet and confirm the cover, all 5 clue scenes, the countdowns, the reveal and the end card appear with no clipped text; confirm the script printed `✓ in sync` and that the file has audio (`ffmpeg -i short.mp4 -af volumedetect -f null -` mean volume around -16 dB, not -91).
+   - Commit and push. In `media`, use the commit-pinned raw URL `https://raw.githubusercontent.com/Mshamula1/anime-quiz-slides/<commit-sha>/slides/.../short.mp4`. Confirm it returns HTTP 200.
    - Schedule a separate `createScheduledPost` (blogId `7999182`) per character with **providers:** youtube, **autoPublish:** true, **media:** `[<short.mp4 URL>]`.
-   - **times:** 12:00 and 20:00 America/New_York. YouTube publishes almost instantly, so there's no 10-minute lead; it goes live alongside the TikTok post. Same skip rule: skip a slot under 10 minutes away or past, and check `getScheduledPosts` so a slot never gets two YouTube posts.
+   - **times:** 12:00 and 20:00 America/New_York. Same skip rule: skip a slot under 10 minutes away or past, and check `getScheduledPosts` so a slot never gets two YouTube posts.
    - **text (YouTube caption):** the same caption as that day's TikTok post (same length, teaser and mode label), reworded for video:
      - "Swipe through all 5 clues" → "Watch all 5 clues".
      - Add "Try to beat the timer on every clue" and "no pausing to google".
+     - "I'll pin the answer later, so don't scroll the comments before you guess!" → "The answer drops at the very end, so lock in your guess before the reveal!" (the v2 video reveals the answer).
+     - "Comment your answer AND which clue you got it on" stays; add "then comment your score".
      - "Tag a friend" → "Send this to a friend".
      - "Follow for a new Guess That Character quiz every day at 12 PM and 8 PM ET." → "Subscribe for a new Guess That Character Short every day at 12 PM and 8 PM ET."
      - Hashtags: `#onepiece #guessthecharacter #animequiz #anime #onepiecefan #shorts #youtubeshorts` (no #animetiktok).
-   - **youtubeData:** `{"title": "<same title as tiktokData.title> #shorts", "type": "short", "privacy": "public", "madeForKids": false, "category": "ENTERTAINMENT", "tags": ["one piece","guess the character","anime quiz","anime","one piece quiz"], "isAiGeneratedContent": false}`. Never put the answer in the title or the narration.
-   - No background music: Metricool can't add sound to YouTube, so the AI narration is the only audio.
+   - **youtubeData:** `{"title": "<same title as tiktokData.title> #shorts", "type": "short", "privacy": "public", "madeForKids": false, "category": "ENTERTAINMENT", "tags": ["one piece","guess the character","anime quiz","anime","one piece quiz"], "isAiGeneratedContent": false}`. Never put the answer in the title or the caption; it is only revealed at the end of the video.
+   - If the v2 build fails, fall back to the old slideshow Short (`python3 templates/make_short.py slides/<...>/clues.html slides/<...>`) and say so in the report.
 9. **Record:**
    - Append both names to `used.txt` with the date and scheduled time.
    - Add the answers to `answers.md` (date, time, character, clues), so the owner can pin them.
