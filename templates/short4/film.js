@@ -234,7 +234,7 @@
       const e = ease.outBack(open, 2);
       G.ellipse(ctx, 0, 0, w / 2 - 10, 34, { fill: '#5a3410', stroke: INK, lw: 5, seed: 68 });
       for (let i = 0; i < 7; i++) { ctx.beginPath(); ctx.arc(-140 + i * 46, -14 - (i % 2) * 14, 22, 0, Math.PI * 2); ctx.fillStyle = '#f5c518'; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = INK; ctx.stroke(); }
-      ctx.translate(-30 * e, -150 * e); ctx.rotate(-0.32 * e);
+      ctx.translate((w / 2 + 30) * e, 70 * e); ctx.rotate(1.3 * e); // the lid flips open and falls against the right side
     } else {
       const lidRot = -Math.abs(U.noise1(t * 30, 9)) * 0.12 * roll;
       ctx.translate(w / 2, 0); ctx.rotate(lidRot); ctx.translate(-w / 2, 0);
