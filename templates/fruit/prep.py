@@ -7,7 +7,7 @@ import numpy as np, soundfile as sf
 
 ap = argparse.ArgumentParser()
 ap.add_argument('fruit'); ap.add_argument('proj')
-ap.add_argument('--voice', default='af_heart'); ap.add_argument('--speed', type=float, default=1.05)
+ap.add_argument('--voice', default='af_heart'); ap.add_argument('--speed', type=float, default=1.15)
 a = ap.parse_args()
 proj = os.path.abspath(a.proj); assets = os.path.join(proj, 'assets'); os.makedirs(assets, exist_ok=True)
 F = json.load(open(a.fruit))

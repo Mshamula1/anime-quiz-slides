@@ -70,14 +70,14 @@
     ctx.restore();
   }
 
-  const PATH = Sk.eraserPath([BOX[0] + 40, BOX[1] + 30, BOX[2] - 40, BOX[3] - 30], 7);
+  const PATH = Sk.eraserPath([BOX[0] + 40, BOX[1] + 30, BOX[2] - 40, BOX[3] - 30], 5);
   function drawScene(ctx, t) {
     let si = 0; for (let i = 0; i < scenes.length; i++) if (t >= scenes[i].drawT0 - 0.35) si = i;
     const s = scenes[si], sk = sketches[si];
     const prev = si > 0 ? sketches[si - 1] : null;
     if (!sk) return;
     // the faint ghost of the last erased drawing never fully leaves the paper
-    if (prev && t >= scenes[si - 1].eraseT1 - 0.01) Sk.render(ctx, prev, 1, 0.05);
+    if (prev && t >= scenes[si - 1].eraseT1 - 0.01) Sk.render(ctx, prev, 1, 0.025);
     if (prev && t >= scenes[si - 1].eraseT1) crumbs(ctx, t, scenes[si - 1], PATH);
     // erasing the previous picture (still in the window before this scene's draw)
     if (si > 0 && t < scenes[si - 1].eraseT1) {
@@ -113,7 +113,13 @@
     draw(ctx, t) {
       paper(ctx);
       header(ctx, t);
+      // camera: a slow push-in on every sketch, and a little bounce the moment it's finished
+      let si = 0; for (let i = 0; i < scenes.length; i++) if (t >= scenes[i].drawT0 - 0.35) si = i;
+      const s = scenes[si];
+      const z = 1 + 0.035 * clamp((t - s.drawT0) / Math.max(1, Math.min(s.eraseT0, S.DURATION) - s.drawT0)) + (t > s.drawT1 ? 0.04 * Math.exp(-(t - s.drawT1) * 9) * Math.cos((t - s.drawT1) * 30) : 0);
+      ctx.save(); ctx.translate(500, 790); ctx.scale(z, z); ctx.translate(-500, -790);
       drawScene(ctx, t);
+      ctx.restore();
       captions(ctx, t);
     },
     post: { paper: 0.35, vignette: 0.16, grain: 0.035 },

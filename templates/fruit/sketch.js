@@ -5,8 +5,8 @@
   const U = globalThis.U;
   const H = (...a) => U.hash(...a);
   const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
-  const GRAPHITE = '#3b3b42';
-  const COL = { graphite: GRAPHITE, blue: '#3a5fb0', red: '#d2453a', orange: '#e8962a', yellow: '#efc12f', green: '#4f9a4a', brown: '#8a5a30', pink: '#e07a8a', gray: '#8a8a92', white: '#ffffff' };
+  const GRAPHITE = '#26262c';
+  const COL = { graphite: GRAPHITE, blue: '#2f6fd6', red: '#e0392f', orange: '#f28a1e', yellow: '#ffcc2e', green: '#3fae4a', brown: '#9a5a2a', pink: '#ff7fa0', gray: '#8a8a92', white: '#ffffff', purple: '#8a4fd0', lilac: '#b892ee', navy: '#1f2f6b', sky: '#7cc4ff', gold: '#f5b800', cream: '#fff3d6' };
 
   // ---------- builder ----------
   function pen(seed = 1) {
@@ -44,7 +44,7 @@
       const p = humanize(resample(pts), o);
       let len = 0; const cum = [0];
       for (let i = 1; i < p.length; i++) { len += Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]); cum.push(len); }
-      items.push({ kind: 'stroke', pts: p, cum, len, w: o.w ?? 4.6, color: COL[o.color] || o.color || GRAPHITE, alpha: o.alpha ?? 0.9, ghost: o.ghost ?? true, speed: o.speed ?? 1 });
+      items.push({ kind: 'stroke', pts: p, cum, len, w: o.w ?? 6, color: COL[o.color] || o.color || GRAPHITE, alpha: o.alpha ?? 0.9, ghost: o.ghost ?? true, speed: o.speed ?? 1 });
       return api;
     };
     const api = {
@@ -98,6 +98,20 @@
         }
         return api;
       },
+      // marker colour fill, wiped on left-to-right with streaks (drawn in sketch order)
+      fill(poly, o = {}) {
+        const xs = poly.map((p) => p[0]), ys = poly.map((p) => p[1]);
+        const bb = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+        items.push({ kind: 'fill', poly, bb, color: COL[o.color] || o.color || '#ccc', alpha: o.alpha ?? 0.9, len: (bb[2] - bb[0] + bb[3] - bb[1]) * 0.5, speed: o.speed ?? 2.2, angle: o.angle ?? 0.5 });
+        return api;
+      },
+      // a word that slams on (no writing), e.g. sound effects
+      stamp(str, x, y, o = {}) {
+        const size = o.size || 90;
+        items.push({ kind: 'stamp', str, x, y, size, font: o.font || `400 ${size}px "Permanent Marker", "Noto Color Emoji", sans-serif`, color: COL[o.color] || o.color || '#d2453a', rot: o.rot || 0,
+          outline: o.outline ?? '#fff', len: 160, speed: 1, alpha: 1 });
+        return api;
+      },
       text(str, x, y, o = {}) {
         const size = o.size || 72;
         items.push({ kind: 'text', str, x, y, size, font: o.font || `700 ${size}px "Caveat", "Noto Color Emoji", sans-serif`, color: COL[o.color] || o.color || GRAPHITE,
@@ -129,11 +143,13 @@
     const items = sk.items;
     if (!sk.total) sk.total = items.reduce((s, it) => s + it.len / it.speed, 0);
     let budget = clamp(p) * sk.total, tip = null;
+    const us = items.map((it) => { const cost = it.len / it.speed, u = budget > 0 ? clamp(budget / cost) : 0; budget -= cost; return u; });
+    // colour fills sit under the ink: draw them first, then lines, words and stamps (in sketch order)
+    const order = items.map((it, i) => i).sort((a, b) => (items[a].kind === 'fill' ? 0 : 1) - (items[b].kind === 'fill' ? 0 : 1) || a - b);
     ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    for (const it of items) {
-      if (budget <= 0) break;
-      const cost = it.len / it.speed, u = clamp(budget / cost);
-      budget -= cost;
+    for (const idx of order) {
+      const it = items[idx], u = us[idx];
+      if (u <= 0) continue;
       if (it.kind === 'stroke') {
         ctx.globalAlpha = it.alpha * mul; ctx.strokeStyle = it.color; ctx.lineWidth = it.w;
         const end = strokePrefix(ctx, it, it.len * u); ctx.stroke();
@@ -141,6 +157,23 @@
           ctx.save(); ctx.translate(1.2, 0.9); ctx.globalAlpha = it.alpha * 0.35 * mul; ctx.lineWidth = it.w * 0.5; strokePrefix(ctx, it, it.len * u); ctx.stroke(); ctx.restore();
         }
         if (u < 1) tip = end;
+      } else if (it.kind === 'fill') {
+        const [x0, y0, x1, y1] = it.bb;
+        ctx.save(); ctx.beginPath(); it.poly.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath(); ctx.clip();
+        ctx.beginPath(); ctx.rect(x0 - 20, y0 - 20, (x1 - x0 + 40) * u, y1 - y0 + 40); ctx.clip();
+        ctx.globalAlpha = it.alpha * mul; ctx.fillStyle = it.color; ctx.fillRect(x0 - 20, y0 - 20, x1 - x0 + 40, y1 - y0 + 40);
+        // marker streaks
+        ctx.globalAlpha = 0.18 * mul; ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+        for (let k = -40; k < (x1 - x0) + (y1 - y0) + 40; k += 22) { ctx.beginPath(); ctx.moveTo(x0 + k, y0 - 10); ctx.lineTo(x0 + k - (y1 - y0 + 20) * it.angle, y1 + 10); ctx.stroke(); }
+        ctx.restore();
+        if (u < 1) tip = [x0 + (x1 - x0) * u, (y0 + y1) / 2 + Math.sin(u * 40) * (y1 - y0) * 0.35];
+      } else if (it.kind === 'stamp') {
+        const k = u < 1 ? 1.6 - 0.6 * u : 1;
+        ctx.save(); ctx.globalAlpha = mul * Math.min(1, u * 3); ctx.translate(it.x, it.y); ctx.rotate(it.rot); ctx.scale(k, k);
+        ctx.font = it.font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+        if (it.outline) { ctx.lineWidth = it.size * 0.16; ctx.strokeStyle = it.outline; ctx.strokeText(it.str, 0, 0); }
+        ctx.lineWidth = it.size * 0.05; ctx.strokeStyle = '#232328'; ctx.strokeText(it.str, 0, 0);
+        ctx.fillStyle = it.color; ctx.fillText(it.str, 0, 0); ctx.restore();
       } else {
         ctx.save(); ctx.globalAlpha = it.alpha * mul; ctx.font = it.font; ctx.textAlign = it.align; ctx.textBaseline = 'middle';
         ctx.translate(it.x, it.y); ctx.rotate(it.rot);
@@ -150,7 +183,6 @@
         ctx.restore();
         if (u < 1) tip = [it.x + (x0 + w * u) * Math.cos(it.rot), it.y + it.size * 0.25 + (x0 + w * u) * Math.sin(it.rot)];
       }
-      if (u < 1) break;
     }
     ctx.restore();
     return tip;
@@ -199,5 +231,11 @@
     return out;
   }
 
-  globalThis.Sketch = { pen, render, pencil, eraserSprite, eraserPath, pathAt, ellPoly, COL };
+  // when each stamp / the end of each sketch happens, as fractions of the drawing time (song.js uses this for SFX)
+  function cues(sk) {
+    const tot = sk.items.reduce((s, it) => s + it.len / it.speed, 0); let c = 0; const out = [];
+    for (const it of sk.items) { if (it.kind === 'stamp') out.push({ kind: 'stamp', f: c / tot }); c += it.len / it.speed; }
+    return out;
+  }
+  globalThis.Sketch = { pen, render, pencil, eraserSprite, eraserPath, pathAt, ellPoly, COL, cues };
 })();
