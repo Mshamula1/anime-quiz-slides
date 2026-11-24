@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Devil Fruit Files (TEST): a pencil-sketch explainer Short for one devil fruit.
+# Devil Fruit Files: a pencil-sketch explainer Short for one devil fruit (YouTube, owner-approved 2026-11-24).
 # usage: bash templates/fruit/make_fruit.sh <fruit-id> <out.mp4>
 #   reads templates/fruit/fruits/<fruit-id>.json (narration lines) + <fruit-id>.js (one sketch per line)
 # needs: node 22+, ffmpeg, chromium, kokoro-onnx + soundfile (model in ~/tts).
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
-ID="$1"; OUT="$2"
+ID="$1"; mkdir -p "$(dirname "$2")"; OUT="$(cd "$(dirname "$2")" && pwd)/$(basename "$2")"
 P="${KEEP_PROJ:-$(mktemp -d)}/proj"; mkdir -p "$P/out"
 cp -r "$HERE/engine" "$HERE/score.js" "$HERE/song.js" "$HERE/film.js" "$HERE/sketch.js" "$HERE/index.html" "$P/"
 cp "$HERE/fruits/$ID.js" "$P/fruit_scenes.js"
