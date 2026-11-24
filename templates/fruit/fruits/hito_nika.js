@@ -79,9 +79,10 @@
     const glassR = glassL.map(([x, y]) => [2 * cx - x, y]);
     P.curve(glassL, { w: 6 }); P.curve(glassR, { w: 6 });
     P.fill(top, { color: 'gold' }); P.fill(bot, { color: 'gold' });
-    P.fill([[cx - 92, cy + 250], [cx - 70, cy + 160], [cx, cy + 105], [cx + 70, cy + 160], [cx + 92, cy + 250]], { color: 'yellow' });
-    P.fill([[cx - 70, cy - 150], [cx + 70, cy - 150], [cx + 12, cy - 30], [cx - 12, cy - 30]], { color: 'yellow' });
-    P.line(cx, cy - 25, cx, cy + 110, { w: 4, color: 'orange' });
+    P.group('sandBot'); P.fill([[cx - 92, cy + 250], [cx - 70, cy + 160], [cx, cy + 105], [cx + 70, cy + 160], [cx + 92, cy + 250]], { color: 'yellow' });
+    P.group('sandTop'); P.fill([[cx - 70, cy - 150], [cx + 70, cy - 150], [cx + 12, cy - 30], [cx - 12, cy - 30]], { color: 'yellow' });
+    P.group('stream'); P.line(cx, cy - 25, cx, cy + 110, { w: 4, color: 'orange' });
+    P.group('glass');
     P.group(null); P.stamp('800', 700, 470, { size: 210, color: 'red', rot: -0.06 });
     P.stamp('YEARS!', 700, 620, { size: 100, color: 'graphite', rot: -0.03 });
     P.group('runner'); fruit(P, 760, 930, 95, { sparkles: false });
@@ -89,7 +90,7 @@
     for (const [x, y, r] of [[600, 1040, 28], [560, 1010, 20], [640, 1060, 18]]) { P.fill(ellPoly(x, y, r, r * 0.8), { color: 'rgba(120,110,100,0.35)', speed: 6 }); P.circle(x, y, r, { w: 3.5 }); }
     P.group(null); P.stamp('GOT AWAY!', 700, 1150, { size: 66, color: 'orange', rot: 0.05 });
     return P;
-  }, anim: (g, k) => g === 'glass' ? { ox: 300, oy: 780, rot: eio(cl((k - 0.1) / 0.55)) * Math.PI } : g === 'runner' ? { x: 650 * ein(cl((k - 0.35) / 1.0)), y: -Math.abs(Math.sin(k * 14)) * 14 * (k > 0.35 ? 1 : 0) } : null, sfx: [{ at: 0.1, kind: 'whoosh' }, { at: 0.4, kind: 'zip' }] });
+  }, anim: (g, k, D) => { const u = cl(k / (D * 0.9)); if (g === 'sandTop') return { ox: 300, oy: 750, sy: 1 - 0.9 * eio(u) }; if (g === 'sandBot') return { ox: 300, oy: 1030, sy: 0.45 + 0.6 * eio(u) }; if (g === 'stream') return { alpha: u < 1 ? 0.6 + 0.4 * Math.sin(k * 40) : 0 }; if (g === 'runner') return { x: 700 * ein(cl((k - D * 0.3) / (D * 0.6))), y: -Math.abs(Math.sin(k * 14)) * 14 * (k > D * 0.3 ? 1 : 0) }; return null; }, sfx: [{ f: 0.0, kind: 'swell' }, { f: 0.3, kind: 'zip' }] });
   // 2 will of its own: sly fruit under a spotlight
   S.push({ draw: () => {
     const P = pen(3);
@@ -126,7 +127,7 @@
     P.stamp('TOP SECRET', cx - 200, cy + 10, { size: 58, color: 'red', rot: -0.05 });
     P.group(null);
     return P;
-  }, anim: (g, k) => { const e = eio(cl((k - 0.1) / 0.45)); if (g === 'right') { const sx = 1 - e; return { ox: 480, oy: 780, sx: Math.max(0.001, sx), alpha: sx > 0.03 ? 1 : 0 }; } if (g === '_cover') return { alpha: e >= 1 ? 1 : 0, ox: 280, oy: 780, s: e >= 1 ? 1 + 0.05 * Math.exp(-(k - 0.55) * 10) : 1 }; return null; }, sfx: [{ at: 0.1, kind: 'flap' }, { at: 0.55, kind: 'thud' }] });
+  }, anim: (g, k, D) => { const e = eio(cl((k - D * 0.2) / (D * 0.35))); if (g === 'right') { const sx = 1 - e; return { ox: 480, oy: 780, sx: Math.max(0.001, sx), alpha: sx > 0.03 ? 1 : 0 }; } if (g === '_cover') return { alpha: e >= 1 ? 1 : 0, ox: 280, oy: 780, s: e >= 1 ? 1 + 0.05 * Math.exp(-(k - D * 0.55) * 10) : 1, rot: e >= 1 ? Math.sin(k * 2) * 0.02 : 0 }; return null; }, sfx: [{ f: 0.2, kind: 'flap' }, { f: 0.55, kind: 'thud' }] });
   // 4 stolen from a government ship
   S.push({ draw: () => {
     const P = pen(5), cx = 420, cy = 860;
@@ -140,13 +141,13 @@
     chest(P, cx + 210, cy - 115, 80, 70);
     P.group('sea'); const sea = []; for (let i = 0; i <= 18; i++) sea.push([30 + i * 52, cy + 100 + Math.sin(i * 1.3) * 18]);
     P.curve(sea, { w: 6, color: 'navy' }); P.fill([...sea, [960, 1260], [30, 1260]], { color: 'sky', alpha: 0.85 });
-    for (let k = 0; k < 3; k++) P.curve([[80 + k * 260, cy + 190 + k * 30], [140 + k * 260, cy + 170 + k * 30], [200 + k * 260, cy + 190 + k * 30]], { w: 5, color: 'white', speed: 3 });
+    P.group('waves'); for (let k = 0; k < 3; k++) P.curve([[80 + k * 260, cy + 190 + k * 30], [140 + k * 260, cy + 170 + k * 30], [200 + k * 260, cy + 190 + k * 30]], { w: 5, color: 'white', speed: 3 });
     P.group('burst'); const b = burstPoly(770, 520, 140, 12, 0.6, 1.25);
     P.fill(b, { color: 'orange' }); P.fill(burstPoly(770, 520, 90, 10, 0.55, 1.25), { color: 'yellow' }); P.path(b, { w: 6, overshoot: false });
     P.stamp('STOLEN!', 770, 525, { size: 80, color: 'red', rot: -0.08 });
     P.group(null);
     return P;
-  }, anim: (g, k) => g === 'ship' ? { ox: 420, oy: 900, x: 900 * eio(cl((k - 0.3) / 3.0)), y: Math.sin(k * 3.2) * 10, rot: Math.sin(k * 3.2) * 0.05 } : g === 'sea' ? { x: Math.sin(k * 2.4) * 14 } : g === 'burst' ? { ox: 770, oy: 520, s: 1 + 0.08 * Math.sin(k * 12) } : null, sfx: [{ at: 0.2, kind: 'whoosh' }] });
+  }, anim: (g, k, D) => g === 'ship' ? { ox: 420, oy: 900, x: 1250 * eio(cl((k - 0.1) / (D - 0.25))), y: Math.sin(k * 3.2) * 10, rot: Math.sin(k * 3.2) * 0.05 } : g === 'waves' ? { y: Math.sin(k * 3) * 8 } : g === 'burst' ? { ox: 770, oy: 520, s: 1 + 0.08 * Math.sin(k * 12) } : null, sfx: [{ f: 0.05, kind: 'whoosh' }] });
   // 5 a little chest, a boy, dessert
   S.push({ draw: () => {
     const P = pen(6);
@@ -161,7 +162,7 @@
     P.group('chomp'); P.stamp('CHOMP!', 760, 640, { size: 96, color: 'orange', rot: 0.08 });
     P.group(null); P.stamp('DESSERT?!', 480, 420, { size: 110, color: 'red', rot: -0.05 });
     return P;
-  }, anim: (g, k) => g === 'fruit' ? { ox: 640, oy: 840, rot: k < 0.6 ? Math.sin(k * 40) * 0.08 : 0, s: 1 - eout(cl((k - 0.6) / 0.35)) } : g === 'chest' ? { y: k < 1 ? -Math.abs(Math.sin(k * 9)) * 10 : 0 } : g === 'chomp' ? { ox: 760, oy: 640, s: 1 + 0.25 * Math.exp(-Math.max(0, k - 0.6) * 8) * (k > 0.6 ? 1 : 0) } : null, sfx: [{ at: 0.6, kind: 'chomp' }] });
+  }, anim: (g, k, D) => { const a = D * 0.4; return g === 'fruit' ? { ox: 640, oy: 840, rot: k < a ? Math.sin(k * 40) * 0.08 : 0, s: 1 - eout(cl((k - a) / (D * 0.2))) } : g === 'chest' ? { y: -Math.abs(Math.sin(k * 5)) * 10 } : g === 'chomp' ? { ox: 760, oy: 640, s: 1 + 0.3 * Math.exp(-Math.max(0, k - a) * 6) * (k > a ? 1 : 0) } : null; }, sfx: [{ f: 0.4, kind: 'chomp' }] });
   // 6 rubber: stretch, bounce, bullet bounce
   S.push({ draw: () => {
     const P = pen(7);
@@ -183,7 +184,7 @@
     P.stamp('PING!', 820, 790, { size: 70, color: 'orange', rot: 0.1 });
     P.stamp('BULLETPROOF', 720, 1130, { size: 58, color: 'blue', rot: -0.04 });
     return P;
-  }, anim: (g, k) => g === 'band' ? { ox: 485, oy: 480, sy: 1 + Math.sin(k * 16) * Math.exp(-k * 2.2) * 0.6 } : g === 'ball' ? { x: k * 70, y: -Math.abs(Math.sin(k * 5)) * 230 * Math.exp(-k * 0.5) } : g === 'bullet' ? { x: 320 * eout(cl(k / 0.7)), y: -140 * eout(cl(k / 0.7)), alpha: 1 - cl((k - 0.5) / 0.3) } : null, sfx: [{ at: 0.0, kind: 'boing' }, { at: 0.05, kind: 'zip' }] });
+  }, anim: (g, k, D) => g === 'band' ? { ox: 485, oy: 480, sy: 1 + Math.sin(k * 14) * Math.exp(-k * 1.0) * 0.6 } : g === 'ball' ? { x: k / D * 420, y: -Math.abs(Math.sin(k * 5)) * 230 * Math.exp(-k / D * 1.2) } : g === 'bullet' ? { x: 320 * eout(cl(k / (D * 0.6))), y: -140 * eout(cl(k / (D * 0.6))), alpha: 1 - cl((k - D * 0.55) / (D * 0.3)) } : null, sfx: [{ at: 0.0, kind: 'boing' }, { at: 0.05, kind: 'zip' }] });
   // 7 heartbeat: drum + pounding heart
   S.push({ draw: () => {
     const P = pen(8), cx = 330, cy = 870;
@@ -217,7 +218,7 @@
     P.group(null); P.stamp('FREE!', 480, 1190, { size: 100, color: 'red', rot: -0.05 });
     P.stamp('SUN GOD', 480, 420, { size: 96, color: 'orange', rot: 0.03 });
     return P;
-  }, anim: (g, k) => { const e = eout(cl(k / 1.2)); if (g === 'sun') return { y: -130 * e }; if (g === 'chainL') return { x: -90 * e, rot: -0.15 * e, ox: 300, oy: 1080 }; if (g === 'chainR') return { x: 90 * e, rot: 0.15 * e, ox: 660, oy: 1080 }; if (g === 'crack') return { alpha: 1 - e }; return null; }, sfx: [{ at: 0.0, kind: 'swell' }, { at: 0.2, kind: 'clink' }] });
+  }, anim: (g, k, D) => { const e = eio(cl(k / (D * 0.9))); if (g === 'sun') return { y: -150 * e }; if (g === 'chainL') return { x: -110 * e, rot: -0.2 * e, ox: 300, oy: 1080 }; if (g === 'chainR') return { x: 110 * e, rot: 0.2 * e, ox: 660, oy: 1080 }; if (g === 'crack') return { alpha: 1 - e }; return null; }, sfx: [{ f: 0.0, kind: 'swell' }, { f: 0.3, kind: 'clink' }] });
   // 9 rubber world: wobbly ground, bouncing boulder, lightbulb
   S.push({ draw: () => {
     const P = pen(10);

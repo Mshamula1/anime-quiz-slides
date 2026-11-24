@@ -71,7 +71,8 @@ scenes.forEach((s, i) => {
     swell: () => I.noiseSweep(1.0, 200, 1500, { q: 0.6, shape: (x) => x, pink: true }),
   };
   const GAINS = { whoosh: 0.22, zip: 0.14, flap: 0.3, thud: 0.45, chomp: 0.3, boing: 0.16, beat: 0.35, clink: 0.25, swell: 0.12 };
-  for (const e of (DEFS[i].sfx || [])) { const tt = s.drawT1 + e.at; if (tt < s.eraseT0 && ACT[e.kind]) fx.addMono(ACT[e.kind](), tt, GAINS[e.kind]); }
+  const Dw = Math.max(0.6, Math.min(s.eraseT0, DURATION) - s.drawT1);
+  for (const e of (DEFS[i].sfx || [])) { const tt = s.drawT1 + (e.f !== undefined ? e.f * Dw : e.at); if (tt < s.eraseT0 && ACT[e.kind]) fx.addMono(ACT[e.kind](), tt, GAINS[e.kind]); }
   // eraser: quick rubs + a whoosh
   if (isFinite(s.eraseT0)) {
     const rows = 6;

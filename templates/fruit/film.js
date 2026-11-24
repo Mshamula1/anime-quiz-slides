@@ -9,7 +9,9 @@
   const defs = (globalThis.FRUIT_SCENES || []).map((d) => (typeof d === 'function' ? { draw: d } : d));
   const sketches = defs.map((d) => d.draw());
   // after a sketch is finished its parts come alive: anim(group, secondsSinceFinished)
-  const animAt = (i, k) => (defs[i] && defs[i].anim && k >= 0 ? (g) => defs[i].anim(g, k) : null);
+  // D = how long the sketch stays up before the eraser, so every animation fills the whole dwell time
+  const dwell = (i) => Math.max(0.6, Math.min(scenes[i].eraseT0, S.DURATION) - scenes[i].drawT1);
+  const animAt = (i, k) => (defs[i] && defs[i].anim ? (g) => defs[i].anim(g, Math.max(0, k), dwell(i)) : null);
   let OFF = null;
 
   function paper(ctx) {
