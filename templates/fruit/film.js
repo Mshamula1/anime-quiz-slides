@@ -1,4 +1,4 @@
-// THE FILM: Devil Fruit Files. A blank sketchbook page; a pencil sketches one picture per narration line,
+// THE FILM: Devil Fruit Files. A blank sketchbook page; one picture is sketched per narration line,
 // an eraser rubs it out, and the next picture is sketched. Pure function of t; all times come from score.js.
 (function () {
   const U = globalThis.U, G = globalThis.G, S = globalThis.SCORE, Studio = globalThis.Studio, Sk = globalThis.Sketch;
@@ -87,11 +87,8 @@
     if (t >= s.eraseT0) return erase(ctx, t, s, sk);
     const p = clamp((t - s.drawT0) / (s.drawT1 - s.drawT0));
     const tip = Sk.render(ctx, sk, p);
-    // pencil: slides in, follows the line, lifts away when the sketch is done
+    // (no pencil on screen: the lines draw themselves)
     const first = sk.items[0].kind === 'stroke' ? sk.items[0].pts[0] : [sk.items[0].x - 200, sk.items[0].y];
-    if (t < s.drawT0) { const u = clamp((t - (s.drawT0 - 0.35)) / 0.35); Sk.pencil(ctx, first[0], first[1], t, 1 - ease.outCubic(u)); }
-    else if (tip) Sk.pencil(ctx, tip[0], tip[1], t, 0);
-    else { const u = clamp((t - s.drawT1) / 0.45); if (u < 1) { const lp = sk._last || [600, 900]; Sk.pencil(ctx, lp[0] + u * 400, lp[1] + u * 600, t, ease.inCubic(u) * 2); } }
     if (tip) sk._last = tip;
   }
   function erase(ctx, t, s, sk) {
