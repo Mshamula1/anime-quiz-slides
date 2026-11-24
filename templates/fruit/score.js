@@ -23,7 +23,7 @@
   D.lines.forEach((L, i) => {
     const at = t, end = at + L.dur;
     const drawT0 = i === 0 ? 0.15 : at - 0.12;
-    const drawDur = Math.max(1.6, Math.min(L.dur * (i === 0 ? 0.8 : 0.68), i === 0 ? 4.2 : 3.4));
+    const drawDur = Math.max(1.6, Math.min(L.dur * (i === 0 ? 0.75 : 0.58), i === 0 ? 4.0 : 3.2));
     const eraseT0 = end + 0.08;
     scenes.push({ i, at, end, dur: L.dur, drawT0, drawT1: drawT0 + drawDur, eraseT0, eraseT1: eraseT0 + ERASE,
       words: L.words.map((w) => ({ w: w.w, t: at + w.t, end: at + w.end })), env: L.env, show: L.show, file: L.file });

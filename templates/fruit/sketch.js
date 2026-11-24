@@ -11,7 +11,7 @@
   // ---------- builder ----------
   function pen(seed = 1) {
     const items = [];
-    let n = 0;
+    let n = 0, grp = null;
     const humanize = (pts, o = {}) => {
       // low-frequency wobble perpendicular to the line + a small overshoot at the ends, like a real hand
       const rough = o.rough ?? 2.2, s = seed * 97 + (n++) * 13;
@@ -44,11 +44,14 @@
       const p = humanize(resample(pts), o);
       let len = 0; const cum = [0];
       for (let i = 1; i < p.length; i++) { len += Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]); cum.push(len); }
-      items.push({ kind: 'stroke', pts: p, cum, len, w: o.w ?? 6, color: COL[o.color] || o.color || GRAPHITE, alpha: o.alpha ?? 0.9, ghost: o.ghost ?? true, speed: o.speed ?? 1 });
+      items.push({ g: grp, kind: 'stroke', pts: p, cum, len, w: o.w ?? 6, color: COL[o.color] || o.color || GRAPHITE, alpha: o.alpha ?? 0.9, ghost: o.ghost ?? true, speed: o.speed ?? 1 });
       return api;
     };
     const api = {
       items,
+      // tag the following items with a group name (for the after-drawing animation). Names starting with '_'
+      // are hidden while drawing and only appear when the animation reveals them.
+      group(name) { grp = name || null; return api; },
       line(x1, y1, x2, y2, o) { return add([[x1, y1], [x2, y2]], o); },
       path(pts, o) { return add(pts, o); },
       // smooth curve through points (Catmull-Rom)
@@ -102,19 +105,19 @@
       fill(poly, o = {}) {
         const xs = poly.map((p) => p[0]), ys = poly.map((p) => p[1]);
         const bb = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
-        items.push({ kind: 'fill', poly, bb, color: COL[o.color] || o.color || '#ccc', alpha: o.alpha ?? 0.9, len: (bb[2] - bb[0] + bb[3] - bb[1]) * 0.5, speed: o.speed ?? 2.2, angle: o.angle ?? 0.5 });
+        items.push({ g: grp, kind: 'fill', poly, bb, color: COL[o.color] || o.color || '#ccc', alpha: o.alpha ?? 0.9, len: (bb[2] - bb[0] + bb[3] - bb[1]) * 0.5, speed: o.speed ?? 2.2, angle: o.angle ?? 0.5 });
         return api;
       },
       // a word that slams on (no writing), e.g. sound effects
       stamp(str, x, y, o = {}) {
         const size = o.size || 90;
-        items.push({ kind: 'stamp', str, x, y, size, font: o.font || `400 ${size}px "Permanent Marker", "Noto Color Emoji", sans-serif`, color: COL[o.color] || o.color || '#d2453a', rot: o.rot || 0,
+        items.push({ g: grp, kind: 'stamp', str, x, y, size, font: o.font || `400 ${size}px "Permanent Marker", "Noto Color Emoji", sans-serif`, color: COL[o.color] || o.color || '#d2453a', rot: o.rot || 0,
           outline: o.outline ?? '#fff', len: 160, speed: 1, alpha: 1 });
         return api;
       },
       text(str, x, y, o = {}) {
         const size = o.size || 72;
-        items.push({ kind: 'text', str, x, y, size, font: o.font || `700 ${size}px "Caveat", "Noto Color Emoji", sans-serif`, color: COL[o.color] || o.color || GRAPHITE,
+        items.push({ g: grp, kind: 'text', str, x, y, size, font: o.font || `700 ${size}px "Caveat", "Noto Color Emoji", sans-serif`, color: COL[o.color] || o.color || GRAPHITE,
           align: o.align || 'center', rot: o.rot || 0, len: str.length * size * 0.42, speed: o.speed ?? 1.6, alpha: o.alpha ?? 0.95 });
         return api;
       },
@@ -139,17 +142,27 @@
     return last;
   }
   // draw a sketch up to progress p (0..1). Returns the pencil tip position (or null when finished).
-  function render(ctx, sk, p, mul = 1) {
+  function render(ctx, sk, p, mul = 1, anim = null) {
     const items = sk.items;
-    if (!sk.total) sk.total = items.reduce((s, it) => s + it.len / it.speed, 0);
+    const hidden = (it) => it.g && it.g[0] === '_';
+    if (!sk.total) sk.total = items.reduce((s, it) => s + (hidden(it) ? 0 : it.len / it.speed), 0);
     let budget = clamp(p) * sk.total, tip = null;
-    const us = items.map((it) => { const cost = it.len / it.speed, u = budget > 0 ? clamp(budget / cost) : 0; budget -= cost; return u; });
+    const us = items.map((it) => { if (hidden(it)) return 1; const cost = it.len / it.speed, u = budget > 0 ? clamp(budget / cost) : 0; budget -= cost; return u; });
     // colour fills sit under the ink: draw them first, then lines, words and stamps (in sketch order)
     const order = items.map((it, i) => i).sort((a, b) => (items[a].kind === 'fill' ? 0 : 1) - (items[b].kind === 'fill' ? 0 : 1) || a - b);
     ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     for (const idx of order) {
       const it = items[idx], u = us[idx];
       if (u <= 0) continue;
+      const tf = anim && it.g ? anim(it.g) : null;
+      if (hidden(it) && !(tf && (tf.alpha ?? 1) > 0)) continue;
+      ctx.save();
+      if (tf) {
+        const ox = tf.ox || 0, oy = tf.oy || 0;
+        ctx.translate(ox + (tf.x || 0), oy + (tf.y || 0)); ctx.rotate(tf.rot || 0); ctx.scale(tf.sx ?? tf.s ?? 1, tf.sy ?? tf.s ?? 1); ctx.translate(-ox, -oy);
+        if (tf.alpha !== undefined) ctx.globalAlpha *= tf.alpha;
+      }
+      const mul0 = mul; mul = mul0 * (tf && tf.alpha !== undefined ? tf.alpha : 1);
       if (it.kind === 'stroke') {
         ctx.globalAlpha = it.alpha * mul; ctx.strokeStyle = it.color; ctx.lineWidth = it.w;
         const end = strokePrefix(ctx, it, it.len * u); ctx.stroke();
@@ -183,6 +196,8 @@
         ctx.restore();
         if (u < 1) tip = [it.x + (x0 + w * u) * Math.cos(it.rot), it.y + it.size * 0.25 + (x0 + w * u) * Math.sin(it.rot)];
       }
+      mul = mul0;
+      ctx.restore();
     }
     ctx.restore();
     return tip;
@@ -234,7 +249,7 @@
   // when each stamp / the end of each sketch happens, as fractions of the drawing time (song.js uses this for SFX)
   function cues(sk) {
     const tot = sk.items.reduce((s, it) => s + it.len / it.speed, 0); let c = 0; const out = [];
-    for (const it of sk.items) { if (it.kind === 'stamp') out.push({ kind: 'stamp', f: c / tot }); c += it.len / it.speed; }
+    for (const it of sk.items) { if (it.g && it.g[0] === '_') continue; if (it.kind === 'stamp') out.push({ kind: 'stamp', f: c / tot }); c += it.len / it.speed; }
     return out;
   }
   globalThis.Sketch = { pen, render, pencil, eraserSprite, eraserPath, pathAt, ellPoly, COL, cues };

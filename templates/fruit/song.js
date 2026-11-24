@@ -10,7 +10,8 @@ const { BEAT, DURATION, m, clock, scenes, ERASE } = sc;
 // load the sketches in node so the stamp sounds land exactly when each stamp pops on screen
 globalThis.U = require('./engine/util');
 require('./sketch.js'); require('./fruit_scenes.js');
-const SKETCHES = globalThis.FRUIT_SCENES.map((f) => f());
+const DEFS = globalThis.FRUIT_SCENES.map((d) => (typeof d === 'function' ? { draw: d } : d));
+const SKETCHES = DEFS.map((d) => d.draw());
 
 const N = Math.ceil(DURATION * SR);
 const bus = () => new Bus(N);
@@ -61,6 +62,16 @@ scenes.forEach((s, i) => {
   // stamps slam on
   for (const c of globalThis.Sketch.cues(sk)) { const tt = s.drawT0 + c.f * dd; foley.addMono(I.thud(95, 0.1), tt, 0.35); }
   // a sparkle chime when the sketch is finished
+  // sounds for the little animation after each sketch
+  const ACT = {
+    whoosh: () => I.noiseSweep(0.45, 300, 2500, { q: 0.9, shape: (x) => Math.sin(x * Math.PI), pink: true }),
+    zip: () => I.noiseSweep(0.25, 1200, 4000, { q: 1.2, shape: (x) => Math.sin(x * Math.PI), pink: true }),
+    flap: () => I.paperFwip(0.9, i + 9), thud: () => I.thud(80, 0.14), chomp: () => I.thwack(),
+    boing: () => I.boing(), beat: () => I.kick({ punch: 0.5, tail: 0.4 }), clink: () => I.woodTick(1.6),
+    swell: () => I.noiseSweep(1.0, 200, 1500, { q: 0.6, shape: (x) => x, pink: true }),
+  };
+  const GAINS = { whoosh: 0.22, zip: 0.14, flap: 0.3, thud: 0.45, chomp: 0.3, boing: 0.16, beat: 0.35, clink: 0.25, swell: 0.12 };
+  for (const e of (DEFS[i].sfx || [])) { const tt = s.drawT1 + e.at; if (tt < s.eraseT0 && ACT[e.kind]) fx.addMono(ACT[e.kind](), tt, GAINS[e.kind]); }
   // eraser: quick rubs + a whoosh
   if (isFinite(s.eraseT0)) {
     const rows = 6;

@@ -6,7 +6,10 @@
   const { clamp, ease } = U;
   const W = G.W, H = G.H;
   const BOX = [70, 330, 950, 1250]; // the drawing area (left of the Shorts buttons, above the captions)
-  const sketches = (globalThis.FRUIT_SCENES || []).map((f) => f());
+  const defs = (globalThis.FRUIT_SCENES || []).map((d) => (typeof d === 'function' ? { draw: d } : d));
+  const sketches = defs.map((d) => d.draw());
+  // after a sketch is finished its parts come alive: anim(group, secondsSinceFinished)
+  const animAt = (i, k) => (defs[i] && defs[i].anim && k >= 0 ? (g) => defs[i].anim(g, k) : null);
   let OFF = null;
 
   function paper(ctx) {
@@ -77,25 +80,25 @@
     const prev = si > 0 ? sketches[si - 1] : null;
     if (!sk) return;
     // the faint ghost of the last erased drawing never fully leaves the paper
-    if (prev && t >= scenes[si - 1].eraseT1 - 0.01) Sk.render(ctx, prev, 1, 0.025);
+    if (prev && t >= scenes[si - 1].eraseT1 - 0.01) Sk.render(ctx, prev, 1, 0.025, animAt(si - 1, scenes[si - 1].eraseT0 - scenes[si - 1].drawT1));
     if (prev && t >= scenes[si - 1].eraseT1) crumbs(ctx, t, scenes[si - 1], PATH);
     // erasing the previous picture (still in the window before this scene's draw)
     if (si > 0 && t < scenes[si - 1].eraseT1) {
       const ps = scenes[si - 1];
-      return erase(ctx, t, ps, prev);
+      return erase(ctx, t, ps, prev, animAt(si - 1, t - ps.drawT1));
     }
-    if (t >= s.eraseT0) return erase(ctx, t, s, sk);
+    if (t >= s.eraseT0) return erase(ctx, t, s, sk, animAt(si, t - s.drawT1));
     const p = clamp((t - s.drawT0) / (s.drawT1 - s.drawT0));
-    const tip = Sk.render(ctx, sk, p);
+    const tip = Sk.render(ctx, sk, p, 1, animAt(si, t - s.drawT1));
     // (no pencil on screen: the lines draw themselves)
     const first = sk.items[0].kind === 'stroke' ? sk.items[0].pts[0] : [sk.items[0].x - 200, sk.items[0].y];
     if (tip) sk._last = tip;
   }
-  function erase(ctx, t, s, sk) {
+  function erase(ctx, t, s, sk, anim) {
     const u = clamp((t - s.eraseT0) / S.ERASE);
     const o = OFF.getContext('2d');
     o.setTransform(1, 0, 0, 1, 0, 0); o.clearRect(0, 0, W, H);
-    Sk.render(o, sk, 1);
+    Sk.render(o, sk, 1, 1, anim);
     o.globalCompositeOperation = 'destination-out'; o.lineCap = 'round'; o.lineJoin = 'round'; o.lineWidth = 260;
     const pts = Sk.pathAt(PATH, ease.inOutQuad(u));
     o.beginPath(); o.moveTo(pts[0][0], pts[0][1]); for (const p of pts) o.lineTo(p[0], p[1]); if (u > 0) o.stroke();
