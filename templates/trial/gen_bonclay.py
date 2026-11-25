@@ -12,14 +12,36 @@ def common_defs(p, fade_to):
 <filter id="{p}blur3"><feGaussianBlur stdDeviation="3"/></filter>
 <filter id="{p}shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#000" flood-opacity=".55"/></filter>
 <linearGradient id="{p}fade" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="{fade_to}" stop-opacity="0"/><stop offset="1" stop-color="{fade_to}"/></linearGradient>
+<filter id="{p}paint" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".022" numOctaves="3" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/></filter>
+<filter id="{p}canvas" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".012 .35" numOctaves="2" seed="5"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .07"/></feComponentTransfer></filter>
+<filter id="{p}bokeh" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
 <radialGradient id="{p}vig" cx=".5" cy=".42" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient>'''
 
 def finish(p):
     return f'''<rect width="{W}" height="{HH}" fill="url(#{p}vig)"/><rect width="{W}" height="{HH}" filter="url(#{p}grain)"/>
 <rect y="{HH-330}" width="{W}" height="330" fill="url(#{p}fade)"/>'''
 
-def svg(p, fade_to, defs, body):
-    return f'<svg class="art" viewBox="0 0 {W} {HH}" preserveAspectRatio="xMidYMid slice" style="top:0;height:{HH}px"><defs>{common_defs(p, fade_to)}{defs}</defs>{body}{finish(p)}</svg>'
+def svg(p, fade_to, defs, body, fx=''):
+    return (f'<svg class="art" viewBox="0 0 {W} {HH}" preserveAspectRatio="xMidYMid slice" style="top:0;height:{HH}px"><defs>{common_defs(p, fade_to)}{defs}</defs>'
+            f'<g filter="url(#{p}paint)">{body}</g>{fx}<rect width="{W}" height="{HH}" filter="url(#{p}canvas)"/>{finish(p)}</svg>')
+
+def bokeh(p, n, cols, x0, x1, y0, y1, rmin=8, rmax=34, seed=2, op=(.12, .35)):
+    r = random.Random(seed); out = ''
+    for _ in range(n):
+        out += f'<circle cx="{r.uniform(x0,x1):.0f}" cy="{r.uniform(y0,y1):.0f}" r="{r.uniform(rmin,rmax):.0f}" fill="{r.choice(cols)}" opacity="{r.uniform(*op):.2f}" filter="url(#{p}bokeh)"/>'
+    return out
+
+def motes(n, x0, x1, y0, y1, col='#fff', seed=3):
+    r = random.Random(seed)
+    return ''.join(f'<circle cx="{r.uniform(x0,x1):.0f}" cy="{r.uniform(y0,y1):.0f}" r="{r.uniform(1,3.2):.1f}" fill="{col}" opacity="{r.uniform(.3,.9):.2f}"/>' for _ in range(n))
+
+def godrays(p, cx, cy, n, length, col, spread=(0, 6.28), op=.16, seed=4, width=.06):
+    r = random.Random(seed); out = ''
+    for k in range(n):
+        a = spread[0] + (spread[1] - spread[0]) * (k + r.uniform(0, 1)) / n
+        w = width * r.uniform(.5, 1.4)
+        out += f'<path d="M{cx} {cy} L{cx+math.cos(a-w)*length:.0f} {cy+math.sin(a-w)*length:.0f} L{cx+math.cos(a+w)*length:.0f} {cy+math.sin(a+w)*length:.0f}Z" fill="{col}" opacity="{op*r.uniform(.5,1.2):.2f}" filter="url(#{p}soft)"/>'
+    return out
 
 def stars(n, y0, y1, rmax=2.4, seed=1, op=(0.4, 1)):
     r = random.Random(seed); s = ''
@@ -41,6 +63,8 @@ def scene1():
             x = c * 140 + off
             sh = R.uniform(-.06, .06)
             bricks += f'<rect x="{x+4}" y="{y+4}" width="132" height="56" rx="10" fill="url(#{p}brick)" opacity="{0.82+sh:.2f}"/>'
+            bricks += f'<path d="M{x+12} {y+10} L{x+128} {y+10}" stroke="#6a5e78" stroke-width="3" opacity=".35"/>'
+            if R.random() < .12: bricks += f'<path d="M{x+40} {y+12} l14 18 l-8 12 l16 14" stroke="#0c0910" stroke-width="3" fill="none" opacity=".7"/>'
     confetti = ''
     cols = ['#ff5fa8', '#ffd34d', '#7fe0ff', '#b98cff', '#ffffff', '#ff8a3d']
     for _ in range(120):
@@ -91,7 +115,12 @@ def scene1():
 <!-- prison bars in the foreground -->
 {''.join(f'<rect x="{x}" y="0" width="34" height="1260" fill="url(#{p}bar)" opacity=".95"/>' for x in [40, 150, 896, 1006])}
 <rect x="0" y="120" width="230" height="26" fill="#1a1620"/><rect x="850" y="120" width="230" height="26" fill="#1a1620"/>'''
-    return svg(p, '#120e17', defs, body)
+    chains = ''.join(f'<g opacity=".9">' + ''.join(f'<ellipse cx="{cx}" cy="{40+i*34}" rx="{9 if i%2 else 13}" ry="18" fill="none" stroke="#6b6378" stroke-width="6"/>' for i in range(n)) + '</g>' for cx, n in [(290, 9), (800, 7)])
+    pools = ''.join(f'<ellipse cx="{x}" cy="{y}" rx="70" ry="44" fill="{c}" opacity=".22" filter="url(#{p}soft)"/>' for x, y, c in [(250, 420, '#ff5fa8'), (830, 360, '#7fe0ff'), (230, 760, '#ffd34d'), (860, 700, '#b98cff'), (300, 230, '#7fe0ff'), (780, 600, '#ff5fa8')])
+    refl = f'<g opacity=".35" transform="translate(0 2000) scale(1 -1)"><rect x="380" y="760" width="320" height="240" fill="url(#{p}door)"/></g>'
+    fx = (godrays(p, 540, 720, 9, 700, '#ffc0e4', (0.9, 2.25), .22, seed=11, width=.05) + refl
+          + bokeh(p, 28, ['#ff5fa8', '#ffd34d', '#7fe0ff', '#fff'], 300, 780, 220, 1000, seed=5) + motes(60, 340, 740, 300, 1100, '#ffe6f4', 6))
+    return svg(p, '#120e17', defs, chains + pools + body, fx)
 
 # ------------------------------------------------------------ 2: giant iron gates opening onto a stormy sea
 def scene2():
@@ -134,7 +163,14 @@ def scene2():
 <!-- tiny ship slipping through the light -->
 <g transform="translate(540 1040) scale(.55)"><path d="M-120 0 L120 0 L90 46 L-90 46Z" fill="#120d0a"/><line x1="0" y1="0" x2="0" y2="-170" stroke="#120d0a" stroke-width="8"/><path d="M6 -160 Q90 -100 6 -30Z" fill="#120d0a"/><path d="M-6 -150 Q-70 -100 -6 -40Z" fill="#120d0a"/></g>
 {sparkle(540, 220, .7, '#fffbe8')}'''
-    return svg(p, '#0a1022', defs, body)
+    panels = ''.join(f'<rect x="{x}" y="{y}" width="140" height="170" rx="10" fill="none" stroke="#6c778e" stroke-width="5" opacity=".55"/><path d="M{x+70} {y+30} l40 55 l-40 55 l-40 -55Z" fill="none" stroke="#6c778e" stroke-width="4" opacity=".5"/>' for x in (190, 350, 600, 760) for y in (300, 520, 740))
+    foam = ''.join(f'<path d="M{x:.0f} {y:.0f} q40 -26 80 0 q-18 -6 -40 -4 q-22 2 -40 4Z" fill="#e8f0ff" opacity=".7"/>' for x, y in [(R.uniform(0, 1000), R.uniform(1000, 1180)) for _ in range(16)])
+    lantern = f'<circle cx="575" cy="1000" r="30" fill="#ffd36b" opacity=".6" filter="url(#{p}soft)"/><circle cx="575" cy="1000" r="5" fill="#fff6c8"/>'
+    near = ''.join(f'<line x1="{x:.0f}" y1="{y:.0f}" x2="{x-26:.0f}" y2="{y+90:.0f}" stroke="#dbe6ff" stroke-width="3.5" opacity=".28"/>' for x, y in [(R.uniform(0, W), R.uniform(0, 1100)) for _ in range(40)])
+    fx = (f'<ellipse cx="700" cy="160" rx="360" ry="200" fill="#9fb6ff" opacity=".22" filter="url(#{p}glow)"/>' + foam + lantern + near
+          + f'<rect x="0" y="930" width="1080" height="120" fill="#b8c8ff" opacity=".12" filter="url(#{p}glow)"/>' + motes(40, 380, 700, 200, 1000, '#fff6d8', 8))
+    body = body.replace('{rivets}', '')
+    return svg(p, '#0a1022', defs, body.replace('<rect x="130" y="170"', panels + '<rect x="130" y="170"', 1), fx)
 
 # ------------------------------------------------------------ 3: decoy ship with a theatre mask sail draws a fleet away at sunset
 def ship(x, y, s, sail='#f4e6cc', hull='#3a2214', mask=False, p='s3'):
@@ -173,7 +209,13 @@ def scene3():
 <g filter="url(#{p}shadow)">{ship(470, hz+170, 1.15, '#f6e8d2', '#3a2214', True)}</g>
 <path d="M210 {hz+250} q140 30 520 0" stroke="#ffd9b0" stroke-width="6" fill="none" opacity=".6"/>
 {gulls}{sparkle(300, 520, .4, '#fff1c8')}'''
-    return svg(p, '#140d24', defs, body)
+    rays = godrays(p, 540, hz, 14, 900, '#ffe3a8', (math.pi * 1.05, math.pi * 1.95), .2, seed=13, width=.04)
+    wake = f'<path d="M170 {hz+250} Q60 {hz+260} 0 {hz+300}" stroke="#ffe2c4" stroke-width="10" fill="none" opacity=".5"/><path d="M200 {hz+262} Q90 {hz+290} 20 {hz+350}" stroke="#ffe2c4" stroke-width="6" fill="none" opacity=".35"/>'
+    splash = f'<g transform="translate(700 {hz+190})"><path d="M-30 0 Q-20 -90 0 -120 Q20 -90 30 0Z" fill="#ffe9d8" opacity=".85"/><path d="M-60 0 Q-50 -50 -30 -60" stroke="#ffe9d8" stroke-width="6" fill="none"/><path d="M60 0 Q50 -50 30 -60" stroke="#ffe9d8" stroke-width="6" fill="none"/><ellipse rx="70" ry="12" fill="#ffe9d8" opacity=".6"/></g>'
+    flashes = ''.join(f'<circle cx="{x}" cy="{y}" r="14" fill="#ffd27a" opacity=".9" filter="url(#{p}blur3)"/>' for x, y in [(845, hz - 2), (752, hz + 4)])
+    glints = ''.join(f'<path d="M{x:.0f} {y:.0f} l6 -2 l-6 -2 l-2 -6 l-2 6 l-6 2 l6 2 l2 6Z" fill="#fff6d8" opacity=".9"/>' for x, y in [(R.uniform(380, 700), R.uniform(hz + 20, hz + 260)) for _ in range(16)])
+    rim = ''.join(f'<ellipse cx="{x}" cy="{y+12}" rx="{rx}" ry="5" fill="#ffd9a0" opacity=".6"/>' for x, y, rx in [(200, 420, 200), (820, 380, 220), (600, 520, 160)])
+    return svg(p, '#140d24', defs, body.replace('<rect y="{hz}"'.replace('{hz}', str(hz)), rays + rim + '<rect y="' + str(hz) + '"', 1), wake + splash + flashes + glints)
 
 # ------------------------------------------------------------ 4: moonlit lake, two swans and satin ballet shoes
 def swan(x, y, s, flip=1):
@@ -206,7 +248,12 @@ def scene4():
 <ellipse cx="540" cy="915" rx="330" ry="22" fill="#9fc0ff" opacity=".18"/>
 {lily}
 {petals}{sparkle(280, 600, .45)}{sparkle(880, 520, .35)}'''
-    return svg(p, '#071224', defs, body)
+    refl = f'<g opacity=".28" filter="url(#{p}blur3)" transform="translate(0 1720) scale(1 -1)">{swan(400, 850, 1.05, -1)}{swan(680, 850, 1.05, 1)}</g>'
+    ripples = ''.join(f'<ellipse cx="{cx}" cy="905" rx="{r}" ry="{r*.12:.0f}" fill="none" stroke="#cfe0ff" stroke-width="2.5" opacity="{.5-k*.1:.2f}"/>' for cx in (400, 680) for k, r in enumerate([150, 200, 250]))
+    flies = ''.join(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.1f}" fill="#fff6a8"/><circle cx="{x:.0f}" cy="{y:.0f}" r="{r*5:.0f}" fill="#fff6a8" opacity=".25" filter="url(#{p}blur3)"/>' for x, y, r in [(R.uniform(80, 1000), R.uniform(560, 1000), R.uniform(2, 3.5)) for _ in range(22)])
+    mist = f'<ellipse cx="540" cy="720" rx="700" ry="70" fill="#9fc0e8" opacity=".28" filter="url(#{p}glow)"/>'
+    body = body.replace('<!-- swans facing each other', refl + ripples + '<!-- swans facing each other', 1)
+    return svg(p, '#071224', defs, body, mist + flies + bokeh(p, 14, ['#cfe0ff', '#ffc2dc'], 0, 1080, 100, 700, seed=9, op=(.08, .2)))
 
 # ------------------------------------------------------------ 5: a right hand pressed to a magic mirror, copying a face
 def scene5():
@@ -242,7 +289,16 @@ def scene5():
 <g transform="translate(560 860) rotate(-10) scale(1.25)"><g filter="url(#{p}soft)" opacity=".8"><g transform="scale(1.06)">{hand.replace('url(#s5hand)', '#c8a8ff').replace('#7a4a2a', '#c8a8ff')}</g></g>{hand}</g>
 <g transform="translate(420 1120) rotate(-8)"><rect x="-60" y="-40" width="120" height="80" rx="16" fill="#ffd34d" stroke="#111" stroke-width="5"/><text x="0" y="16" text-anchor="middle" font-family="Inter" font-weight="900" font-size="48" fill="#111">R</text></g>
 {sparkle(330, 280, .6, '#f1eaff')}{sparkle(770, 360, .45, '#ffd34d')}{sparkle(800, 960, .5)}{sparkle(250, 760, .35)}'''
-    return svg(p, '#0e0820', defs, body)
+    def candle(x, y):
+        return (f'<rect x="{x-18}" y="{y}" width="36" height="150" rx="6" fill="#f3e6cf"/><rect x="{x-18}" y="{y}" width="12" height="150" fill="#fff" opacity=".5"/>'
+                f'<ellipse cx="{x}" cy="{y-30}" rx="70" ry="90" fill="#ffb84a" opacity=".35" filter="url(#{p}glow)"/>'
+                f'<path d="M{x} {y-60} C{x+18} {y-30} {x+12} {y-4} {x} {y-2} C{x-12} {y-4} {x-18} {y-30} {x} {y-60}Z" fill="#ffcf5a"/><path d="M{x} {y-40} C{x+8} {y-22} {x+5} {y-8} {x} {y-6} C{x-5} {y-8} {x-8} {y-22} {x} {y-40}Z" fill="#fff6d8"/>'
+                f'<rect x="{x-40}" y="{y+150}" width="80" height="16" rx="6" fill="url(#{p}gold)"/>')
+    fil = ''.join(f'<path d="M{540+sx*240} {600+sy*360} q{sx*60} {sy*-10} {sx*70} {sy*-70} q{sx*-30} 10 {sx*-40} 40" stroke="url(#{p}gold)" stroke-width="8" fill="none"/>' for sx in (-1, 1) for sy in (-1, 1))
+    parts = ''.join(f'<circle cx="{540+math.cos(a)*d:.0f}" cy="{720+math.sin(a)*d*1.2:.0f}" r="{R.uniform(1.5,4):.1f}" fill="#e6d8ff" opacity="{R.uniform(.4,1):.2f}"/>' for a, d in [(R.uniform(0, 6.28), R.uniform(60, 330)) for _ in range(90)])
+    streak = f'<path d="M330 300 L460 230 L360 520Z" fill="#fff" opacity=".16"/><path d="M640 860 L760 780 L720 960Z" fill="#fff" opacity=".1"/>'
+    body = body.replace('<!-- the right hand pressed', fil + '<!-- the right hand pressed', 1)
+    return svg(p, '#0e0820', defs, body + candle(130, 700) + candle(950, 700), parts + streak + bokeh(p, 16, ['#c8a8ff', '#ffd34d'], 200, 880, 150, 1050, seed=12, op=(.1, .25)))
 
 CLUES = [
     ('#120e17', scene1, "After the timeskip, I became <em>queen of a secret paradise</em> hidden deep inside a prison. 👑", '🧠', 'GENIUS', 'next clue'),
