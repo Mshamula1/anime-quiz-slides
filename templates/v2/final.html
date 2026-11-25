@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;font-family:Inter,"Noto Color Emoji",sans-serif}
+.slide{width:1080px;height:1920px;position:relative;overflow:hidden;color:#fff}
+.fin{background:#07091a}
+.f-bg{position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);object-fit:cover;filter:blur(16px) brightness(.6) saturate(1.35)}
+.f-shade{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 36%,rgba(10,12,40,.1) 0%,rgba(6,8,22,.55) 55%,rgba(4,5,14,.92) 100%)}
+.f-glow{position:absolute;left:50%;top:600px;width:900px;height:900px;margin:-450px 0 0 -450px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,90,.55) 0%,rgba(255,170,60,.18) 40%,transparent 68%)}
+.f-q{position:absolute;left:0;right:0;top:250px;text-align:center;font-weight:900;font-size:640px;line-height:1;
+  background:linear-gradient(180deg,#fff6d6 0%,#ffd45e 45%,#f29a1c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 10px 0 #4a2306) drop-shadow(0 30px 50px rgba(0,0,0,.6))}
+.f-kicker{position:absolute;top:200px;left:0;right:0;text-align:center}
+.f-kicker span{display:inline-flex;align-items:center;gap:22px;font-weight:800;font-size:30px;letter-spacing:12px;color:#ffe2a6}
+.f-kicker span:before,.f-kicker span:after{content:"";width:90px;height:3px;background:linear-gradient(90deg,transparent,#ffe2a6)}
+.f-kicker span:after{background:linear-gradient(90deg,#ffe2a6,transparent)}
+.f-title{position:absolute;top:985px;left:0;right:0;text-align:center;font-weight:900;font-size:112px;letter-spacing:-3px;line-height:.95;text-shadow:0 8px 30px rgba(0,0,0,.6)}
+.f-cta{position:absolute;top:1235px;left:0;right:0;text-align:center}
+.f-cta div{display:inline-block;font-weight:900;font-size:48px;color:#1a1206;padding:22px 44px;border-radius:999px;background:linear-gradient(180deg,#ffe9a6,#ffc23a);box-shadow:0 0 40px rgba(255,200,90,.45),0 10px 0 #7a4a0a}
+.f-ladder{position:absolute;top:1400px;left:80px;right:80px;display:flex;justify-content:space-between;gap:12px}
+.f-step{flex:1;text-align:center;padding:16px 0 14px;border-radius:22px;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.16)}
+.f-step .f-e{font-size:44px;line-height:1.1}
+.f-step .f-n{font-weight:800;font-size:20px;letter-spacing:1px;color:rgba(255,255,255,.75);margin-top:6px}
+.f-step.f-top{background:rgba(255,212,94,.16);border-color:rgba(255,212,94,.7)}
+.f-step.f-top .f-n{color:#ffd45e}
+.f-note{position:absolute;top:1560px;left:0;right:0;text-align:center;font-weight:700;font-size:32px;color:rgba(255,255,255,.8)}
+.f-note b{color:#ffd45e}
+.f-dots{position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.55) 1.4px,transparent 2px) 0 0/140px 160px;opacity:.25;-webkit-mask-image:radial-gradient(ellipse at 50% 35%,#000 0%,transparent 60%)}
+</style></head><body>
+<section class="slide fin">
+  <img class="f-bg" src="../cover.jpg">
+  <div class="f-shade"></div><div class="f-dots"></div>
+  <div class="f-glow"></div>
+  <div class="f-kicker"><span>FINAL ANSWER?</span></div>
+  <div class="f-q">?</div>
+  <div class="f-title">WHO DO YOU<br>THINK IT WAS?</div>
+  <div class="f-cta"><div>Comment your answer 👇</div></div>
+  <div class="f-ladder">
+    <div class="f-step f-top"><div class="f-e">🧠</div><div class="f-n">CLUE 1</div></div>
+    <div class="f-step"><div class="f-e">🔥</div><div class="f-n">CLUE 2</div></div>
+    <div class="f-step"><div class="f-e">😎</div><div class="f-n">CLUE 3</div></div>
+    <div class="f-step"><div class="f-e">👍</div><div class="f-n">CLUE 4</div></div>
+    <div class="f-step"><div class="f-e">🙂</div><div class="f-n">CLUE 5</div></div>
+    <div class="f-step"><div class="f-e">😅</div><div class="f-n">CLUE 6</div></div>
+  </div>
+  <div class="f-note">+ which clue you got it on · <b>answer pinned soon 👀</b></div>
+</section>
+</body></html>

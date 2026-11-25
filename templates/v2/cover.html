@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;font-family:Inter,sans-serif}
+.slide{width:1080px;height:1920px;position:relative;overflow:hidden;color:#fff}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,20,.82) 0%,rgba(6,8,20,.45) 24%,rgba(6,8,20,0) 42%,rgba(6,8,20,0) 70%,rgba(6,8,20,.55) 100%)}
+.lock{position:absolute;top:210px;left:0;right:0;text-align:center}
+.kicker{display:inline-flex;align-items:center;gap:22px;font-weight:800;font-size:30px;letter-spacing:12px;color:#ffe2a6;text-transform:uppercase}
+.kicker:before,.kicker:after{content:"";width:90px;height:3px;background:linear-gradient(90deg,transparent,#ffe2a6)}
+.kicker:after{background:linear-gradient(90deg,#ffe2a6,transparent)}
+.t1{margin-top:30px;font-weight:900;font-size:124px;letter-spacing:-3px;line-height:.95;text-shadow:0 8px 30px rgba(0,0,0,.55)}
+.t2{font-weight:900;font-size:146px;letter-spacing:-5px;line-height:.95;background:linear-gradient(180deg,#fff6d6 0%,#ffd45e 45%,#f29a1c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 0 #4a2306) drop-shadow(0 16px 30px rgba(0,0,0,.55))}
+.rule{width:150px;height:6px;border-radius:3px;margin:34px auto 0;background:#ffd45e;box-shadow:0 0 24px rgba(255,212,94,.8)}
+.swipe{position:absolute;left:0;right:0;top:1640px;text-align:center}
+.swipe span{display:inline-block;font-weight:800;font-size:32px;letter-spacing:6px;padding:18px 38px;border-radius:999px;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.35);backdrop-filter:blur(8px)}
+</style></head><body>
+<section class="slide">
+  <img class="bg" src="../cover.jpg">
+  <div class="shade"></div>
+  <div class="lock">
+    <div class="kicker">One Piece</div>
+    <div class="t1">GUESS THAT</div>
+    <div class="t2">CHARACTER</div>
+    <div class="rule"></div>
+  </div>
+  <div class="swipe"><span>SWIPE →</span></div>
+</section>
+</body></html>
