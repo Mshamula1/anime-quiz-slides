@@ -84,12 +84,12 @@
   S.push({ draw: () => {
     const P = pen(23);
     P.group('m'); P.line(170, 1000, 260, 760, { w: 9, color: 'brown' }); P.fill(ellPoly(262, 752, 20, 26), { color: 'red' }); flame(P, 268, 740, 70, 120, 3);
-    P.group(null); P.stamp('MAKE', 220, 1110, { size: 64, color: 'orange', rot: -0.05 });
+    P.group(null); P.stamp('MAKE', 210, 1110, { size: 54, color: 'orange', rot: -0.05 });
     P.group('swirl'); const sw = []; for (let i = 0; i <= 60; i++) { const a = i / 60 * Math.PI * 4, r = 20 + i * 1.6; sw.push([500 + Math.cos(a) * r, 840 + Math.sin(a) * r * 0.9]); }
     P.curve(sw, { w: 14, color: 'orange' }); P.curve(sw, { w: 4, color: 'red' });
-    P.group(null); P.stamp('CONTROL', 500, 1110, { size: 64, color: 'orange', rot: 0.04 });
+    P.group(null); P.stamp('CONTROL', 500, 1175, { size: 54, color: 'orange', rot: 0.04 });
     P.group('big'); flame(P, 790, 1010, 230, 420, 5);
-    P.group(null); P.stamp('BECOME!', 790, 1110, { size: 64, color: 'red', rot: -0.04 });
+    P.group(null); P.stamp('BECOME!', 800, 1110, { size: 54, color: 'red', rot: -0.04 });
     P.stamp('FIRE', 500, 470, { size: 150, color: 'red', rot: -0.03 });
     return P;
   }, anim: (g, k) => g === 'm' ? { ox: 268, oy: 740, s: flick(k, 11, 0.08) } : g === 'swirl' ? { ox: 500, oy: 840, rot: k * 2.2 } : g === 'big' ? { ox: 790, oy: 1010, sy: flick(k, 8, 0.07), sx: flick(k + 2, 7, 0.04) } : null, sfx: [{ f: 0.05, kind: 'whoosh' }] });
