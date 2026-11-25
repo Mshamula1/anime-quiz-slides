@@ -1,5 +1,5 @@
-# TRIAL: painted full-bleed clue scenes (original art only) for one quiz.
-# usage: python3 gen_bonclay.py OUT.html
+# v2 TikTok carousel (owner-approved 2026-11-24): REFERENCE quiz generator (Bon Clay). Copy to work/gen_<name>.py, replace the scenes + CLUES.
+# usage: python3 work/gen_<name>.py work/clues_<name>.html   (then templates/v2/build6.py + templates/shoot.py)
 import sys, random, math
 R = random.Random(7)
 W, HH = 1080, 1260  # art canvas (full bleed behind the header, fades into the slide under the card)

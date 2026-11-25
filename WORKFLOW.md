@@ -4,62 +4,64 @@ Each daily run makes **two** One Piece "Guess That Character" photo carousels an
 for **11:50 AM** and **7:50 PM America/New_York** (10 minutes early, because TikTok takes ~10 min to process a carousel, so posts appear around 12:00 and 8:00) on TikTok account @theanimecontenthub (Metricool blogId `7999182`). The brand's YouTube channel no longer gets the quizzes: since 2026-11-24 (owner-approved) it gets two **Devil Fruit Files** sketch-explainer videos a day at **12:00 PM** and **8:00 PM** ET, one devil fruit each (see step 8b). The daily report lists both the TikTok and YouTube times.
 
 ## Fixed pieces (never change these)
-- **Slide 1, the cover:** `slides/cover.jpg`. It's the owner's chosen cover image. Use this exact file every time; never re-render or redraw it.
-- **Slide 7, the ending:** the "WHO DO YOU THINK IT WAS?" slide. `templates/build.py` produces it identically each run.
-- **Layout and style:** `templates/base.html` (CSS, cover, final) and the clue-section shell in `templates/example_clues.html`.
+**TikTok carousel v2 (owner-approved 2026-11-24):** 8 slides = cover + 6 painted clue slides + the new final slide.
+- **Slide 1, the cover:** `slides/cover.jpg` (the v2 cover: the owner's sunset photo with "— ONE PIECE —", "GUESS THAT / CHARACTER" in white + gold and a "SWIPE →" pill; source `templates/v2/cover.html` over `templates/cover.jpg`). Use this exact file every time; never re-render or redraw it. (The old cover is kept as `slides/cover_v1.jpg`; don't use it.)
+- **Slide 8, the ending:** `templates/v2/final.html` (blurred cover photo, gold "?", "WHO DO YOU THINK IT WAS?", "Comment your answer 👇", six clue tiles 🧠🔥😎👍🙂😅, "answer pinned soon 👀"). `templates/v2/build6.py` adds it identically each run.
+- **Layout:** the clue-card CSS in `templates/base.html`; the full-bleed painted art + card shell exactly as in `templates/v2/example_quiz.py` (Bon Clay, the reference for quality).
 
 ## Steps for each run
 1. **Pick 2 characters** from One Piece that are NOT in `used.txt`.
    - Lean niche and hard: side characters and one-arc characters, not the main crew.
    - Make the two posts different difficulty levels: one "HARD MODE" and one "EXTREME MODE".
-2. **Write 5 clues per character,** ordered hardest to easiest.
-   - Clue 1 is obscure trivia; clue 5 is a near-giveaway (an epithet or iconic moment).
+2. **Write 6 clues per character,** ordered hardest to easiest.
+   - Clue 1 is obscure trivia; clue 6 is a near-giveaway (an epithet, power or iconic moment). Make sure an earlier clue never gives away a later one.
    - **Verify every clue with WebSearch** (One Piece wiki / fandom) before using it. If a fact can't be verified, drop it.
-   - Write in first person, 60–90 characters each, and wrap the key phrase in `<em>`.
+   - Write in first person, 50–90 characters each (max 4 lines on the card), and wrap the key phrase in `<em>`.
    - Never use the character's name in a clue.
-3. **Write `clues_<name>.html`** with 5 `<section class="slide">` blocks, copying the structure of `templates/example_clues.html`:
-   - header tag + "CLUE N/5"
-   - `<svg class="art" viewBox="0 0 1080 960">` illustration
-   - parchment card with "CLUE #N" ribbon and the clue text
-   - rank badge: 🧠 GENIUS / 🔥 TRUE FAN / 😎 SOLID / 👍 NOT BAD / 😅 ...it's ok
-   - swipe label: "next clue →" ×3, "last clue →", "answer time →"
-   - Give each slide its own color scheme. Shared SVG defs available from build.py: `#parch #roll #gold #cane #steel2 #grille #dropsh #fogblur #stormsea #bluesea #rope`.
-   - JS helpers available: `#laurel #candles #snow #chests #xgrid #rows #tally #crowd`.
-4. **Art.** Illustrations are original drawings of objects, places, animals or ideas that fit each clue: a cake with candles, a ship in fog, a treasure chest, a medal, a mountain castle, and so on. Style them as bold pirate-adventure cartoon art: thick ink outlines, gradients, rays, comic bursts.
+3. **Write the quiz generator** `work/gen_<name>.py`: copy `templates/v2/example_quiz.py` and replace its scene functions and `CLUES` list. Keep the helpers (`common_defs`, `svg`, `finish`, `bokeh`, `motes`, `godrays`, `sparkle`, `stars`) and the slide shell:
+   - header tag + "CLUE N/6"; parchment card with "CLUE #N" ribbon and the clue text
+   - rank badge, in order: 🧠 GENIUS / 🔥 TRUE FAN / 😎 SOLID / 👍 NOT BAD / 🙂 FAIR / 😅 ...it's ok
+   - swipe label: "next clue →" ×4, "last clue →", "answer time →"
+   - one scene function per clue returning `svg(p, bg, defs, body, fx)` with a unique id prefix per slide (`s1`…`s6`) and the slide's dark background colour as the fade colour.
+4. **Art (v2 painted style).** Each clue gets a full-bleed, cinematic illustration (viewBox 0 0 1080 1260, fades into the slide behind the card) of original objects, places, animals or ideas that fit the clue. Quality bar = the Bon Clay example:
+   - a real scene with depth: background (sky/walls with gradient and texture), midground, and a hero object in the light; atmospheric perspective and a clear focal point under the header
+   - lighting: glows, god rays, rim light, reflections, soft drop shadows; plus particles (bokeh, dust motes, sparkles, rain, petals, confetti) generated in Python loops
+   - richness: many shaped details (bricks with highlights and cracks, rivets, ripples, foam, flames...), gradients on every surface; no flat clip-art, no comic text labels like "YUM!"
+   - the `paint` and `canvas` filters, grain and vignette come from `svg()` automatically.
    - Note (not an owner rule): Claude, which runs this automation, doesn't draw copyrighted characters, recreate official One Piece designs, or pull official artwork from the web, so every illustration is an original drawing of that kind.
 5. **Render:**
-   - `cd templates && python3 build.py ../work/clues_<name>.html ../work/<name>.html`
-   - `python3 shoot.py ../work/<name>.html ../work/<name>`
-6. **Check:** make a side-by-side contact sheet of slides 2–7 and look at it. Look for:
-   - text overflowing cards, banners or bubbles
-   - elements cut off at the edges
+   - `python3 work/gen_<name>.py work/clues_<name>.html`
+   - `python3 templates/v2/build6.py work/clues_<name>.html work/<name>.html`
+   - `python3 templates/shoot.py work/<name>.html work/<name>` → `slide_1..slide_7.png` (6 clues + final)
+6. **Check:** make a side-by-side contact sheet of the 7 rendered slides and look at it. Look for:
+   - text overflowing the card (max 4 lines) or the swipe label being covered
+   - elements cut off at the edges, or art detail hidden behind the header pills
    - badges covering text
    - anything that depicts a character
 
    Fix and re-render as needed.
 7. **Publish the images:**
-   - Convert slides 2–7 to JPEG (quality 92). TikTok's API doesn't accept PNG.
-   - Save them to `slides/<YYYY-MM-DD>-<name>/slide_2.jpg … slide_7.jpg`.
+   - Convert the 7 rendered slides to JPEG (quality 92) as `slides/<YYYY-MM-DD>-<name>/slide_2.jpg … slide_8.jpg` (rendered slide_1 → slide_2.jpg, …, rendered slide_7 → slide_8.jpg). TikTok's API doesn't accept PNG. Also copy `work/clues_<name>.html` to that folder as `clues.html`.
    - Commit and push to `main`.
-   - Confirm each `https://raw.githubusercontent.com/Mshamula1/anime-quiz-slides/main/slides/...` URL returns HTTP 200 before scheduling.
+   - Use **commit-pinned** URLs (`https://raw.githubusercontent.com/Mshamula1/anime-quiz-slides/<commit-sha>/slides/...`) for every media item, and confirm each returns HTTP 200 before scheduling.
 8. **Schedule in Metricool** with `createScheduledPost` (blogId `7999182`):
    - **providers:** tiktok
    - **autoPublish:** true
    - **privacyOption:** PUBLIC_TO_EVERYONE
    - **photoCoverIndex:** 0
    - **autoAddMusic:** true. REQUIRED on every post, so TikTok attaches a trending sound to the carousel; posts without it publish silent. The owner wants sound on every post. (The Metricool API can't pick a specific song for TikTok; only this random-music option is available.)
-   - **media**, in this order: `.../slides/cover.jpg`, then slide_2 … slide_7 of that character
+   - **media**, 8 items in this order: `.../slides/cover.jpg`, then slide_2 … slide_8 of that character
    - **times:** 11:50 and 19:50 America/New_York that day (NOT 12:00/20:00; the 10-minute lead covers TikTok processing).
      - If a slot is less than 10 minutes away or already past, skip it, and make only as many characters as there are open slots.
      - First call `getScheduledPosts` for that day; if a slot already has a TikTok post, don't add another.
    - **tiktokData.title (required by Metricool):** `Guess That Character: HARD MODE 💀` or `Guess That Character: EXTREME MODE 💀💀`. Never put the answer in the title.
    - **Caption: always a LONG description,** 1,000–1,800 characters (owner's standing request), no line breaks (the TikTok API strips them), ending with
      `#onepiece #guessthecharacter #animequiz #anime #animetiktok #onepiecefan`.
-     Fill the length with engagement copy, not answer hints: a vague teaser about the character type (never names, places, crews or devil fruits that give it away), how the clues get easier, a "no googling" challenge, a "got it on clue 1 = genius" brag prompt, a tag-a-friend line, and "Follow for a new Guess That Character quiz every day at 12 PM and 8 PM ET."
+     Fill the length with engagement copy, not answer hints: a vague teaser about the character type (never names, places, crews or devil fruits that give it away), how the clues get easier, a "no googling" challenge, a brag prompt using the rank ladder (clue 1 genius, 2 true fan, 3 solid, 4 not bad, 5 fair, 6 ok), a tag-a-friend line, and "Follow for a new Guess That Character quiz every day at 12 PM and 8 PM ET."
      It must still include the style of the earlier captions:
      - a mode label ("HARD MODE 💀" / "EXTREME MODE 💀💀")
      - a challenge hook
-     - "swipe through all 5 clues"
+     - "swipe through all 6 clues"
      - "comment your answer AND which clue you got it on"
      - "I'll pin the answer later"
      - "who should I do next?"
