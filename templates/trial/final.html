@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;font-family:Inter,"Noto Color Emoji",sans-serif}
+.slide{width:1080px;height:1920px;position:relative;overflow:hidden;color:#fff;background:#07091a}
+.bg{position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);object-fit:cover;filter:blur(16px) brightness(.6) saturate(1.35)}
+.shade{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 36%,rgba(10,12,40,.1) 0%,rgba(6,8,22,.55) 55%,rgba(4,5,14,.92) 100%)}
+.glow{position:absolute;left:50%;top:600px;width:900px;height:900px;margin:-450px 0 0 -450px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,90,.55) 0%,rgba(255,170,60,.18) 40%,transparent 68%)}
+.q{position:absolute;left:0;right:0;top:250px;text-align:center;font-weight:900;font-size:640px;line-height:1;
+  background:linear-gradient(180deg,#fff6d6 0%,#ffd45e 45%,#f29a1c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 10px 0 #4a2306) drop-shadow(0 30px 50px rgba(0,0,0,.6))}
+.kicker{position:absolute;top:200px;left:0;right:0;text-align:center}
+.kicker span{display:inline-flex;align-items:center;gap:22px;font-weight:800;font-size:30px;letter-spacing:12px;color:#ffe2a6}
+.kicker span:before,.kicker span:after{content:"";width:90px;height:3px;background:linear-gradient(90deg,transparent,#ffe2a6)}
+.kicker span:after{background:linear-gradient(90deg,#ffe2a6,transparent)}
+.title{position:absolute;top:985px;left:0;right:0;text-align:center;font-weight:900;font-size:112px;letter-spacing:-3px;line-height:.95;text-shadow:0 8px 30px rgba(0,0,0,.6)}
+.cta{position:absolute;top:1235px;left:0;right:0;text-align:center}
+.cta div{display:inline-block;font-weight:900;font-size:48px;color:#1a1206;padding:22px 44px;border-radius:999px;background:linear-gradient(180deg,#ffe9a6,#ffc23a);box-shadow:0 0 40px rgba(255,200,90,.45),0 10px 0 #7a4a0a}
+.ladder{position:absolute;top:1400px;left:120px;right:120px;display:flex;justify-content:space-between;gap:14px}
+.step{flex:1;text-align:center;padding:16px 0 14px;border-radius:22px;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.16)}
+.step .e{font-size:44px;line-height:1.1}
+.step .n{font-weight:800;font-size:22px;letter-spacing:2px;color:rgba(255,255,255,.75);margin-top:6px}
+.step.top{background:rgba(255,212,94,.16);border-color:rgba(255,212,94,.7)}
+.step.top .n{color:#ffd45e}
+.note{position:absolute;top:1560px;left:0;right:0;text-align:center;font-weight:700;font-size:32px;color:rgba(255,255,255,.8)}
+.note b{color:#ffd45e}
+.dots{position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.55) 1.4px,transparent 2px) 0 0/140px 160px;opacity:.25;-webkit-mask-image:radial-gradient(ellipse at 50% 35%,#000 0%,transparent 60%)}
+</style></head><body>
+<section class="slide">
+  <img class="bg" src="../cover.jpg">
+  <div class="shade"></div><div class="dots"></div>
+  <div class="glow"></div>
+  <div class="kicker"><span>FINAL ANSWER?</span></div>
+  <div class="q">?</div>
+  <div class="title">WHO DO YOU<br>THINK IT WAS?</div>
+  <div class="cta"><div>Comment your answer 👇</div></div>
+  <div class="ladder">
+    <div class="step top"><div class="e">🧠</div><div class="n">CLUE 1</div></div>
+    <div class="step"><div class="e">🔥</div><div class="n">CLUE 2</div></div>
+    <div class="step"><div class="e">😎</div><div class="n">CLUE 3</div></div>
+    <div class="step"><div class="e">👍</div><div class="n">CLUE 4</div></div>
+    <div class="step"><div class="e">😅</div><div class="n">CLUE 5</div></div>
+  </div>
+  <div class="note">+ which clue you got it on · <b>answer pinned soon 👀</b></div>
+</section>
+</body></html>
