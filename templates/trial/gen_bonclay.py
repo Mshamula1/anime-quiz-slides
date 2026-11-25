@@ -300,18 +300,68 @@ def scene5():
     body = body.replace('<!-- the right hand pressed', fil + '<!-- the right hand pressed', 1)
     return svg(p, '#0e0820', defs, body + candle(130, 700) + candle(950, 700), parts + streak + bokeh(p, 16, ['#c8a8ff', '#ffd34d'], 200, 880, 150, 1050, seed=12, op=(.1, .25)))
 
+
+# ------------------------------------------------------------ 6 (new): the warden's office: cap, key ring and a theatre mask (a perfect copy)
+def scene6():
+    p = 's6'
+    stones = ''
+    for row in range(12):
+        y = 60 + row * 86; off = (row % 2) * 90
+        for c in range(-1, 7):
+            x = c * 180 + off
+            stones += f'<rect x="{x+5}" y="{y+5}" width="170" height="76" rx="14" fill="url(#{p}stone)" opacity="{R.uniform(.75,.95):.2f}"/><path d="M{x+16} {y+12} L{x+160} {y+12}" stroke="#5f7d72" stroke-width="3" opacity=".35"/>'
+    def torch(x, y):
+        return (f'<ellipse cx="{x}" cy="{y-40}" rx="130" ry="170" fill="#ff9a3c" opacity=".35" filter="url(#{p}glow)"/>'
+                f'<rect x="{x-12}" y="{y}" width="24" height="90" rx="6" fill="#3a2414"/><path d="M{x-34} {y} L{x+34} {y} L{x+22} {y+26} L{x-22} {y+26}Z" fill="#6b4a2a"/>'
+                f'<path d="M{x} {y-90} C{x+40} {y-40} {x+30} {y-4} {x} {y} C{x-30} {y-4} {x-40} {y-40} {x} {y-90}Z" fill="#ff7a1a"/>'
+                f'<path d="M{x} {y-56} C{x+20} {y-30} {x+14} {y-6} {x} {y-4} C{x-14} {y-6} {x-20} {y-30} {x} {y-56}Z" fill="#ffe08a"/>')
+    keys = ''
+    for k in range(7):
+        a = -0.9 + k * 0.3
+        keys += (f'<g transform="rotate({math.degrees(a):.0f} 560 560)"><rect x="552" y="600" width="16" height="170" rx="6" fill="url(#{p}brass)"/>'
+                 f'<circle cx="560" cy="604" r="28" fill="none" stroke="url(#{p}brass)" stroke-width="12"/>'
+                 f'<rect x="568" y="{730 + (k%3)*8}" width="34" height="14" rx="3" fill="url(#{p}brass)"/><rect x="568" y="752" width="24" height="12" rx="3" fill="url(#{p}brass)"/></g>')
+    defs = (f'<linearGradient id="{p}stone" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2c4a42"/><stop offset="1" stop-color="#16271f"/></linearGradient>'
+            f'<linearGradient id="{p}brass" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff0b0"/><stop offset=".4" stop-color="#e0a92c"/><stop offset="1" stop-color="#7a4f0c"/></linearGradient>'
+            f'<linearGradient id="{p}cap" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3a3f52"/><stop offset="1" stop-color="#14161f"/></linearGradient>'
+            f'<linearGradient id="{p}desk" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#6b3e1e"/><stop offset="1" stop-color="#2a160a"/></linearGradient>'
+            f'<radialGradient id="{p}spot" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe6b0" stop-opacity=".55"/><stop offset="1" stop-color="#ffe6b0" stop-opacity="0"/></radialGradient>')
+    mask = ('<g transform="translate(760 760) rotate(14) scale(1.15)"><path d="M-80 -70 Q0 -110 80 -70 Q90 30 0 85 Q-90 30 -80 -70Z" fill="#fff8ee" stroke="#2a1a10" stroke-width="5"/>'
+            '<path d="M-50 -22 q18 -18 36 0" stroke="#2a1a10" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M14 -22 q18 -18 36 0" stroke="#2a1a10" stroke-width="8" fill="none" stroke-linecap="round"/>'
+            '<path d="M-42 22 Q0 62 42 22" fill="#c8262c" stroke="#2a1a10" stroke-width="5"/><circle cx="-58" cy="14" r="11" fill="#ff9fb8" opacity=".7"/><circle cx="58" cy="14" r="11" fill="#ff9fb8" opacity=".7"/>'
+            '<path d="M80 -60 q40 -10 60 20" stroke="#c8262c" stroke-width="6" fill="none"/></g>')
+    body = (f'<rect width="{W}" height="{HH}" fill="#0c1612"/>{stones}<rect width="{W}" height="{HH}" fill="#050a08" opacity=".35"/>'
+            f'{torch(150, 380)}{torch(930, 380)}'
+            f'<ellipse cx="540" cy="760" rx="520" ry="420" fill="url(#{p}spot)"/>'
+            f'<path d="M90 900 L990 900 L1040 1260 L40 1260Z" fill="url(#{p}desk)"/><rect x="90" y="890" width="900" height="24" rx="8" fill="#8a5428"/>'
+            f'<ellipse cx="540" cy="900" rx="380" ry="30" fill="#000" opacity=".25" filter="url(#{p}soft)"/>'
+            f'<g transform="translate(340 830)" filter="url(#{p}shadow)">'
+            f'<path d="M-170 30 C-170 -60 -110 -110 0 -112 C110 -110 170 -60 170 30Z" fill="url(#{p}cap)"/>'
+            f'<path d="M-190 26 C-120 60 120 60 190 26 L180 52 C110 84 -110 84 -180 52Z" fill="#0a0b10"/>'
+            f'<rect x="-172" y="-6" width="344" height="34" fill="#c8262c"/><rect x="-172" y="-6" width="344" height="8" fill="#ff5a5a" opacity=".5"/>'
+            f'<circle cx="0" cy="-40" r="34" fill="url(#{p}brass)" stroke="#6b4508" stroke-width="4"/><path d="M0 -62 l7 14 l15 2 l-11 10 l3 15 l-14 -8 l-14 8 l3 -15 l-11 -10 l15 -2Z" fill="#fff4c8"/>'
+            f'<path d="M-120 -70 C-60 -96 40 -100 100 -82" stroke="#fff" stroke-width="6" opacity=".2" fill="none"/></g>'
+            f'<line x1="560" y1="250" x2="560" y2="540" stroke="#3a3a3a" stroke-width="8"/><path d="M540 250 q20 -40 40 0" stroke="#777" stroke-width="10" fill="none"/>'
+            f'<g filter="url(#{p}shadow)">{keys}<circle cx="560" cy="560" r="60" fill="none" stroke="url(#{p}brass)" stroke-width="16"/></g>'
+            f'<g filter="url(#{p}shadow)">{mask}</g>')
+    fx = (bokeh(p, 18, ['#ffb86b', '#ffe08a'], 60, 1020, 150, 900, seed=21, op=(.08, .22)) + motes(50, 60, 1020, 200, 1000, '#ffe6b0', 22)
+          + godrays(p, 560, 200, 7, 900, '#ffe6b0', (1.2, 1.95), .12, seed=23, width=.05) + sparkle(820, 640, .45, '#fff8ee') + sparkle(470, 470, .35, '#ffe08a'))
+    return svg(p, '#0c1612', defs, body, fx)
+
+
 CLUES = [
     ('#120e17', scene1, "After the timeskip, I became <em>queen of a secret paradise</em> hidden deep inside a prison. 👑", '🧠', 'GENIUS', 'next clue'),
-    ('#0a1022', scene2, "I stayed behind in disguise to <em>open the Gates of Justice</em> for my friends. ⛓️", '🔥', 'TRUE FAN', 'next clue'),
+    ('#0a1022', scene2, "I stayed behind to <em>open the Gates of Justice</em> so my friends could escape. ⛓️", '🔥', 'TRUE FAN', 'next clue'),
     ('#140d24', scene3, "My crew dressed up as <em>the pirates we'd just fought</em> to lure a Marine fleet away. 🎭", '😎', 'SOLID', 'next clue'),
-    ('#071224', scene4, "I fight with <em>ballet-style kicks</em>, and two swans sit on the back of my coat. 🦢", '👍', 'NOT BAD', 'last clue'),
+    ('#0c1612', scene6, "I fooled a whole prison by <em>becoming its chief warden</em>. 🗝️", '👍', 'NOT BAD', 'next clue'),
+    ('#071224', scene4, "I fight with <em>ballet-style kicks</em>, and two swans sit on the back of my coat. 🦢", '🙂', 'FAIR', 'last clue'),
     ('#0e0820', scene5, "One touch of my <em>right hand</em> and I can copy anyone's face. 🪞", '😅', '...it’s ok', 'answer time'),
 ]
 out = []
 for k, (bg, fn, clue, emo, rank, swipe) in enumerate(CLUES, 1):
     out.append(f'''<section class="slide" style="background:{bg}">
   {fn()}
-  <div class="head"><div class="tag">GUESS THAT CHARACTER</div><div class="clueN">CLUE {k}/5</div></div>
+  <div class="head"><div class="tag">GUESS THAT CHARACTER</div><div class="clueN">CLUE {k}/6</div></div>
   <div class="card"><div class="paper"><div class="ribbon">CLUE #{k}</div>
     <div class="clue">{clue}</div></div>
     <div class="rank">get it here = {emo} {rank}</div></div>
