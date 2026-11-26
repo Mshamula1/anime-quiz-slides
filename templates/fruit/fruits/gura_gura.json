@@ -1,0 +1,39 @@
+{
+  "id": "gura_gura",
+  "number": 4,
+  "title": "Gura Gura no Mi",
+  "sources": [
+    "https://onepiece.fandom.com/wiki/Edward_Newgate",
+    "https://onepiece.fandom.com/wiki/Paramecia",
+    "https://onepiece.fandom.com/wiki/Summit_War_of_Marineford",
+    "https://onepiece.fandom.com/wiki/Marshall_D._Teach",
+    "https://tvtropes.org/pmwiki/pmwiki.php/Sandbox/OnePieceWhitebeard",
+    "https://myanimelist.net/character/2751"
+  ],
+  "lines": [
+    { "say": "Goo-rah Goo-rah no Mee. The Tremor-Tremor Fruit. A fruit said to have the power to destroy the world.",
+      "show": "Gura Gura no Mi. The Tremor-Tremor Fruit. A fruit said to have the power to destroy the world." },
+    { "say": "It's a Paramecia fruit, and it's widely called the strongest Paramecia of them all.",
+      "show": "It's a Paramecia fruit, and it's widely called the strongest Paramecia of them all." },
+    { "say": "Its user was Edward Newgate. Whitebeard. The Strongest Man in the World.",
+      "show": "Its user was Edward Newgate. Whitebeard. The Strongest Man in the World." },
+    { "say": "With one punch, he could crack the air itself, like a pane of glass.",
+      "show": "With one punch, he could crack the air itself, like a pane of glass." },
+    { "say": "Those cracks became shockwaves. And the shockwaves became earthquakes.",
+      "show": "Those cracks became shockwaves. And the shockwaves became earthquakes." },
+    { "say": "Hit the sea floor, and the quake turns into a giant tsunami.",
+      "show": "Hit the sea floor, and the quake turns into a giant tsunami." },
+    { "say": "In the war at Marineford, one quake tilted the entire island, and the sea around it.",
+      "show": "In the war at Marineford, one quake tilted the entire island, and the sea around it." },
+    { "say": "He took hundreds of wounds, and died standing. Not a single scar on his back. He never ran.",
+      "show": "He took hundreds of wounds, and died standing. Not a single scar on his back. He never ran." },
+    { "say": "His last words shook the world too. The One Piece is real!",
+      "show": "His last words shook the world too. \"The One Piece is real!\"" },
+    { "say": "Then Blackbeard stepped in, and by means nobody knows, took the quake power for himself.",
+      "show": "Then Blackbeard stepped in, and by means nobody knows, took the quake power for himself." },
+    { "say": "Now he's the only known person in history with the powers of two devil fruits.",
+      "show": "Now he's the only known person in history with the powers of two devil fruits." },
+    { "say": "Which devil fruit should I draw next? Comment below!",
+      "show": "Which devil fruit should I draw next? Comment below!" }
+  ]
+}

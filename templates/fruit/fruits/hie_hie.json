@@ -1,0 +1,38 @@
+{
+  "id": "hie_hie",
+  "number": 5,
+  "title": "Hie Hie no Mi",
+  "sources": [
+    "https://onepiece.fandom.com/wiki/Hie_Hie_no_Mi",
+    "https://onepiece.fandom.com/wiki/Kuzan",
+    "https://onepiece.fandom.com/wiki/Punk_Hazard",
+    "https://onepiece.fandom.com/wiki/Summit_War_of_Marineford",
+    "https://wiki.sportskeeda.com/one-piece/hie-hie-no-mi-in-one-piece"
+  ],
+  "lines": [
+    { "say": "Hee-eh Hee-eh no Mee. The Ice-Ice Fruit. The power to freeze anything... even the sea.",
+      "show": "Hie Hie no Mi. The Ice-Ice Fruit. The power to freeze anything... even the sea." },
+    { "say": "It's a Lohjeeah fruit. Its user can make ice, control ice, and turn into ice.",
+      "show": "It's a Logia fruit. Its user can make ice, control ice, and turn into ice." },
+    { "say": "It belonged to Koozahn, the Marine Admiral known as Ah-oh-kee-jee.",
+      "show": "It belonged to Kuzan, the Marine Admiral known as Aokiji." },
+    { "say": "His attacks even have English names. Ice Saber. Ice Block: Partisan. Ice Time.",
+      "show": "His attacks even have English names. Ice Saber. Ice Block: Partisan. Ice Time." },
+    { "say": "At Long Ring Long Land, he froze Luffy solid.",
+      "show": "At Long Ring Long Land, he froze Luffy solid." },
+    { "say": "At Marineford, two giant tsunamis came crashing in. He froze them both, then froze the bay. Ice Age.",
+      "show": "At Marineford, two giant tsunamis came crashing in. He froze them both, then froze the bay. Ice Age." },
+    { "say": "Later, he faced Admiral Ahkahyeenoo for the title of Fleet Admiral. Ice against magma. For ten days.",
+      "show": "Later, he faced Admiral Akainu for the title of Fleet Admiral. Ice against magma. For ten days." },
+    { "say": "Their duel on Punk Hazard left the island half frozen and half burning.",
+      "show": "Their duel on Punk Hazard left the island half frozen and half burning." },
+    { "say": "He lost, and lost a leg too. Now he walks on a leg made of ice. And he quit the Marines.",
+      "show": "He lost, and lost a leg too. Now he walks on a leg made of ice. And he quit the Marines." },
+    { "say": "His ride? A bicycle, rolling across the ocean on a road of ice he freezes himself.",
+      "show": "His ride? A bicycle, rolling across the ocean on a road of ice he freezes himself." },
+    { "say": "Today he sails with the Blackbeard Pirates, as one of their Ten Titanic Captains.",
+      "show": "Today he sails with the Blackbeard Pirates, as one of their Ten Titanic Captains." },
+    { "say": "Which devil fruit should I draw next? Comment below!",
+      "show": "Which devil fruit should I draw next? Comment below!" }
+  ]
+}
