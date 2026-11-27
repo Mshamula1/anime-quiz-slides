@@ -1,0 +1,38 @@
+{
+  "id": "yami_yami",
+  "number": 6,
+  "title": "Yami Yami no Mi",
+  "sources": [
+    "https://onepiece.fandom.com/wiki/Yami_Yami_no_Mi",
+    "https://onepiece.fandom.com/wiki/Marshall_D._Teach",
+    "https://onepiece.fandom.com/wiki/Thatch",
+    "https://www.sportskeeda.com/one-piece-wiki/yami-yami-no-mi-in-one-piece",
+    "https://www.dexerto.com/anime/one-piece-the-abilities-of-blackbeards-devil-fruits-explained-2144965/"
+  ],
+  "lines": [
+    { "say": "Yah-mee Yah-mee no Mee. The Dark-Dark Fruit. A pirate killed his own crewmate to get it.",
+      "show": "Yami Yami no Mi. The Dark-Dark Fruit. A pirate killed his own crewmate to get it." },
+    { "say": "It's a Lohjeeah fruit, but a strange one. Its darkness works like endless gravity. It pulls everything in.",
+      "show": "It's a Logia fruit, but a strange one. Its darkness works like endless gravity. It pulls everything in." },
+    { "say": "Its user is Marshall Dee Teech. Better known as Blackbeard.",
+      "show": "Its user is Marshall D. Teach. Better known as Blackbeard." },
+    { "say": "He sailed with the Whitebeard Pirates for years, waiting for this one fruit.",
+      "show": "He sailed with the Whitebeard Pirates for years, waiting for this one fruit." },
+    { "say": "When his crewmate Thatch found it, Teech killed him, took the fruit, and ran.",
+      "show": "When his crewmate Thatch found it, Teach killed him, took the fruit, and ran." },
+    { "say": "Black Hole. The darkness spreads across the ground and swallows whatever stands on it. Liberation spits it all back out.",
+      "show": "Black Hole. The darkness spreads across the ground and swallows whatever stands on it. Liberation spits it all back out." },
+    { "say": "The scariest part? One touch, and another devil fruit user's powers are cancelled.",
+      "show": "The scariest part? One touch, and another devil fruit user's powers are cancelled." },
+    { "say": "The price: his body can't turn intangible like other Lohjeeahs. He takes every hit, and feels even more pain.",
+      "show": "The price: his body can't turn intangible like other Logias. He takes every hit, and feels even more pain." },
+    { "say": "On Bah-nah-roh Island, Ace's fire was swallowed by the darkness. Teech won, and handed Ace to the Marines.",
+      "show": "On Banaro Island, Ace's fire was swallowed by the darkness. Teach won, and handed Ace to the Marines." },
+    { "say": "Then at Marineford, after Whitebeard fell, Teech stole the Tremor-Tremor Fruit too.",
+      "show": "Then at Marineford, after Whitebeard fell, Teach stole the Tremor-Tremor Fruit too." },
+    { "say": "He's the only person known to wield two devil fruits. And nobody knows how.",
+      "show": "He's the only person known to wield two devil fruits. And nobody knows how." },
+    { "say": "Which devil fruit should I draw next? Comment below!",
+      "show": "Which devil fruit should I draw next? Comment below!" }
+  ]
+}

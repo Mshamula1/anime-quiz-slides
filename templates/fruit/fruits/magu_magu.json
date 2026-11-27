@@ -1,0 +1,39 @@
+{
+  "id": "magu_magu",
+  "number": 7,
+  "title": "Magu Magu no Mi",
+  "sources": [
+    "https://onepiece.fandom.com/wiki/Magu_Magu_no_Mi",
+    "https://onepiece.fandom.com/wiki/Sakazuki",
+    "https://onepiece.fandom.com/wiki/Summit_War_of_Marineford",
+    "https://onepiece.fandom.com/wiki/Ohara_Incident",
+    "https://onepiece.fandom.com/wiki/Punk_Hazard",
+    "https://wiki.sportskeeda.com/one-piece/magu-magu-no-mi-in-one-piece"
+  ],
+  "lines": [
+    { "say": "Mahgoo Mahgoo no Mee. The Magma-Magma Fruit. A power so hot, it can burn fire itself.",
+      "show": "Magu Magu no Mi. The Magma-Magma Fruit. A power so hot, it can burn fire itself." },
+    { "say": "It's a Lohjeeah fruit. Its user can create magma, control magma, and turn into magma.",
+      "show": "It's a Logia fruit. Its user can create magma, control magma, and turn into magma." },
+    { "say": "It belongs to Sah-kah-zoo-kee, the Marine known as Ahkahyeenoo. The name means Red Dog.",
+      "show": "It belongs to Sakazuki, the Marine known as Akainu. The name means Red Dog." },
+    { "say": "The three admirals had colour-and-animal names. A red dog, a blue pheasant, and a yellow monkey.",
+      "show": "The three admirals had colour-and-animal names. A red dog, a blue pheasant, and a yellow monkey." },
+    { "say": "His creed? Absolute Justice. No mercy for pirates. Ever.",
+      "show": "His creed? Absolute Justice. No mercy for pirates. Ever." },
+    { "say": "Years before, during the Buster Call on Oh-hah-rah, he even sank a ship full of fleeing people.",
+      "show": "Years before, during the Buster Call on Ohara, he even sank a ship full of fleeing people." },
+    { "say": "At Marineford, he rained giant fists of magma down on the pirate ships. Meteor Volcano.",
+      "show": "At Marineford, he rained giant fists of magma down on the pirate ships. Meteor Volcano." },
+    { "say": "And that war proved it. Magma burns hotter than fire. Even a fire Lohjeeah couldn't stand against it.",
+      "show": "And that war proved it. Magma burns hotter than fire. Even a fire Logia couldn't stand against it." },
+    { "say": "After the war, he fought Ah-oh-kee-jee on Punk Hazard for the top seat. Magma against ice, for ten days.",
+      "show": "After the war, he fought Aokiji on Punk Hazard for the top seat. Magma against ice, for ten days." },
+    { "say": "Magma won. Half of that island still burns today.",
+      "show": "Magma won. Half of that island still burns today." },
+    { "say": "And the Red Dog became Fleet Admiral, the head of the entire Marines.",
+      "show": "And the Red Dog became Fleet Admiral, the head of the entire Marines." },
+    { "say": "Which devil fruit should I draw next? Comment below!",
+      "show": "Which devil fruit should I draw next? Comment below!" }
+  ]
+}
