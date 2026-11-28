@@ -1,0 +1,36 @@
+{
+  "id": "yomi_yomi",
+  "number": 8,
+  "title": "Yomi Yomi no Mi",
+  "sources": [
+    "https://en.wikipedia.org/wiki/Brook_(One_Piece)",
+    "https://devilfruitencyclopedia.vercel.app/fruit/yomi-yomi-no-mi",
+    "https://wiki.sportskeeda.com/one-piece/who-is-brook-in-one-piece"
+  ],
+  "lines": [
+    { "say": "Yohmee Yohmee no Mee. The Revive-Revive Fruit. A power that does nothing at all... until you die.",
+      "show": "Yomi Yomi no Mi. The Revive-Revive Fruit. A power that does nothing at all... until you die." },
+    { "say": "It's a Paramecia fruit. In life, it gives you no powers. But when you die, your soul comes back. Once.",
+      "show": "It's a Paramecia fruit. In life, it gives you no powers. But when you die, your soul comes back. Once." },
+    { "say": "The man who ate it was Brook, the musician of the Rum-bar Pirates.",
+      "show": "The man who ate it was Brook, the musician of the Rumbar Pirates." },
+    { "say": "At Reverse Mountain, his crew left a young whale named Lah-boon behind, promising to come back.",
+      "show": "At Reverse Mountain, his crew left a young whale named Laboon behind, promising to come back." },
+    { "say": "They never made it. Brook died at sea, and the fruit sent his soul back to find his body.",
+      "show": "They never made it. Brook died at sea, and the fruit sent his soul back to find his body." },
+    { "say": "But this was the Florian Triangle, a sea buried in thick fog. His soul got lost.",
+      "show": "But this was the Florian Triangle, a sea buried in thick fog. His soul got lost." },
+    { "say": "When he finally found his body, it was nothing but bones. Only his afro survived. Strong roots!",
+      "show": "When he finally found his body, it was nothing but bones. Only his afro survived. Strong roots!" },
+    { "say": "Then came fifty years alone, drifting on a ghost ship.",
+      "show": "Then came fifty years alone, drifting on a ghost ship." },
+    { "say": "But the fruit had more to give. Now his soul can leave his body and float around on its own.",
+      "show": "But the fruit had more to give. Now his soul can leave his body and float around on its own." },
+    { "say": "And that soul carries the chill of the underworld. Cold enough to make ice.",
+      "show": "And that soul carries the chill of the underworld. Cold enough to make ice." },
+    { "say": "Today he's the Soul King, a rock star. Fun fact: Oh-dah's early sketches gave him a cowboy hat instead of an afro.",
+      "show": "Today he's the Soul King, a rock star. Fun fact: Oda's early sketches gave him a cowboy hat instead of an afro." },
+    { "say": "Which devil fruit should I draw next? Comment below!",
+      "show": "Which devil fruit should I draw next? Comment below!" }
+  ]
+}
